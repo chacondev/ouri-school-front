@@ -1,0 +1,63 @@
+<div class="page-card" style="max-width:600px">
+  <div class="card-header">
+    <h2>Meu Perfil</h2>
+    @if (!modoEdicao()) {
+      <button mat-flat-button class="btn-blue" (click)="modoEdicao.set(true)">
+        <mat-icon>edit</mat-icon> Editar
+      </button>
+    }
+  </div>
+
+  @if (sucesso()) {
+    <div style="background:#d4edda;border-radius:4px;padding:10px 14px;color:#155724;margin-bottom:16px;font-size:0.85rem">
+      Perfil atualizado com sucesso!
+    </div>
+  }
+
+  @if (usuario(); as u) {
+    @if (!modoEdicao()) {
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:8px">
+          <div style="width:64px;height:64px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center">
+            <mat-icon style="color:#fff;font-size:36px;width:36px;height:36px">person</mat-icon>
+          </div>
+          <div>
+            <div style="font-size:1.1rem;font-weight:600">{{ u.nome }}</div>
+            <div style="font-size:0.85rem;color:#666">Professor</div>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div><label style="font-size:0.75rem;color:#999;text-transform:uppercase;letter-spacing:0.5px">Email</label><p>{{ u.email }}</p></div>
+          <div><label style="font-size:0.75rem;color:#999;text-transform:uppercase;letter-spacing:0.5px">Telefone</label><p>{{ u.telefone ?? '—' }}</p></div>
+        </div>
+      </div>
+    } @else {
+      <form [formGroup]="form" (ngSubmit)="salvar()">
+        <div class="form-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Nome</mat-label>
+            <input matInput formControlName="nome" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" type="email" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Telefone</mat-label>
+            <input matInput formControlName="telefone" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Nova Senha (opcional)</mat-label>
+            <input matInput formControlName="senha" type="password" />
+          </mat-form-field>
+        </div>
+        <div class="flex flex-end gap-8 mt-16">
+          <button type="button" mat-stroked-button (click)="modoEdicao.set(false)">Cancelar</button>
+          <button type="submit" mat-flat-button class="btn-green" [disabled]="form.invalid || salvando()">
+            {{ salvando() ? 'Salvando...' : 'Salvar' }}
+          </button>
+        </div>
+      </form>
+    }
+  }
+</div>

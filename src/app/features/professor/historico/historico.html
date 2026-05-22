@@ -1,0 +1,36 @@
+<div class="page-card">
+  <div class="card-header">
+    <h2>Histórico de Aulas</h2>
+  </div>
+
+  <table mat-table [dataSource]="aulas()">
+    <ng-container matColumnDef="modalidade">
+      <th mat-header-cell *matHeaderCellDef>Modalidade</th>
+      <td mat-cell *matCellDef="let a">{{ a.modalidade }}</td>
+    </ng-container>
+    <ng-container matColumnDef="quadra">
+      <th mat-header-cell *matHeaderCellDef>Quadra</th>
+      <td mat-cell *matCellDef="let a">{{ a.quadra }}</td>
+    </ng-container>
+    <ng-container matColumnDef="dataHoraInicio">
+      <th mat-header-cell *matHeaderCellDef>Data</th>
+      <td mat-cell *matCellDef="let a">{{ a.dataHoraInicio | date:'dd/MM/yyyy HH:mm' }}</td>
+    </ng-container>
+    <ng-container matColumnDef="dataHoraFim">
+      <th mat-header-cell *matHeaderCellDef>Fim</th>
+      <td mat-cell *matCellDef="let a">{{ a.dataHoraFim | date:'HH:mm' }}</td>
+    </ng-container>
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let a">
+        <span [class]="statusClass(a.status)">{{ a.status }}</span>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+    <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
+  </table>
+
+  @if (aulas().length === 0) {
+    <p class="text-center mt-16" style="color:#999">Nenhuma aula no histórico.</p>
+  }
+</div>

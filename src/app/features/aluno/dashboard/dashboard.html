@@ -1,0 +1,52 @@
+@if (dashboard(); as d) {
+  <div class="dashboard-grid">
+    <div class="stat-card">
+      <span class="stat-label">Inscrições Ativas</span>
+      <span class="stat-value">{{ d.totalInscricoesAtivas }}</span>
+    </div>
+    <div class="stat-card" style="background:var(--blue)">
+      <span class="stat-label">Próximas Aulas</span>
+      <span class="stat-value">{{ d.proximasAulas.length }}</span>
+    </div>
+  </div>
+}
+
+<div class="page-card">
+  <div class="card-header">
+    <h2>Minhas Inscrições</h2>
+    <a routerLink="/aluno/aulas" mat-flat-button class="btn-yellow">
+      <mat-icon>search</mat-icon> Ver Aulas Disponíveis
+    </a>
+  </div>
+
+  <table mat-table [dataSource]="inscricoes()">
+    <ng-container matColumnDef="modalidade">
+      <th mat-header-cell *matHeaderCellDef>Modalidade</th>
+      <td mat-cell *matCellDef="let i">{{ i.modalidade }}</td>
+    </ng-container>
+    <ng-container matColumnDef="professor">
+      <th mat-header-cell *matHeaderCellDef>Professor</th>
+      <td mat-cell *matCellDef="let i">{{ i.professor }}</td>
+    </ng-container>
+    <ng-container matColumnDef="dataHoraInicio">
+      <th mat-header-cell *matHeaderCellDef>Data / Hora</th>
+      <td mat-cell *matCellDef="let i">{{ i.dataHoraInicio | date:'dd/MM/yy HH:mm' }}</td>
+    </ng-container>
+    <ng-container matColumnDef="acoes">
+      <th mat-header-cell *matHeaderCellDef>Ação</th>
+      <td mat-cell *matCellDef="let i">
+        <button mat-icon-button (click)="cancelarInscricao(i)" title="Cancelar inscrição">
+          <mat-icon style="color:var(--red)">cancel</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+    <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
+  </table>
+
+  @if (inscricoes().length === 0) {
+    <p class="text-center mt-16" style="color:#999">
+      Nenhuma inscrição ativa. <a routerLink="/aluno/aulas" style="color:var(--blue)">Ver aulas disponíveis</a>
+    </p>
+  }
+</div>

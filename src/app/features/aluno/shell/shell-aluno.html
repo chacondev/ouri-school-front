@@ -1,0 +1,40 @@
+<div class="app-shell">
+  <aside class="app-sidebar">
+    <div class="sidebar-logo">
+      <h2>OURI</h2>
+      <small>Sistemas de Gestão</small>
+    </div>
+    <nav>
+      <a routerLink="/aluno/dashboard" routerLinkActive="active">
+        <mat-icon>dashboard</mat-icon> Dashboard
+      </a>
+      <a routerLink="/aluno/aulas" routerLinkActive="active">
+        <mat-icon>sports</mat-icon> Aulas Disponíveis
+      </a>
+      <a routerLink="/aluno/historico" routerLinkActive="active">
+        <mat-icon>history</mat-icon> Histórico
+      </a>
+      <a routerLink="/aluno/perfil" routerLinkActive="active">
+        <mat-icon>person</mat-icon> Meu Perfil
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <a (click)="auth.logout()">
+        <mat-icon>logout</mat-icon> Sair
+      </a>
+    </div>
+  </aside>
+
+  <div class="app-main">
+    <div class="app-topbar">
+      <h1>OURI · Aluno</h1>
+      <div class="user-info">
+        <mat-icon>account_circle</mat-icon>
+        <span>{{ nome }}</span>
+      </div>
+    </div>
+    <div class="app-content">
+      <router-outlet />
+    </div>
+  </div>
+</div>

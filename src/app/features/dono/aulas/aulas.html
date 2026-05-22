@@ -1,0 +1,109 @@
+<div class="page-card">
+  <div class="card-header">
+    <h2>Aulas</h2>
+    @if (!modoForm()) {
+      <button mat-flat-button class="btn-green" (click)="abrirNovo()">
+        <mat-icon>add</mat-icon> Nova Aula
+      </button>
+    }
+  </div>
+
+  @if (modoForm()) {
+    <div style="background:#f8f9fa;border-radius:8px;padding:20px;margin-bottom:20px">
+      <h3 style="margin-bottom:16px;color:var(--navy)">Nova Aula</h3>
+      <form [formGroup]="form" (ngSubmit)="salvar()">
+        <div class="form-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Modalidade</mat-label>
+            <mat-select formControlName="idModalidade">
+              @for (m of dadosCriacao()?.modalidades; track m.id) {
+                <mat-option [value]="m.id">{{ m.nome }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Quadra</mat-label>
+            <mat-select formControlName="idQuadra">
+              @for (q of dadosCriacao()?.quadras; track q.id) {
+                <mat-option [value]="q.id">{{ q.nome }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Professor</mat-label>
+            <mat-select formControlName="idProfessor">
+              @for (p of dadosCriacao()?.professores; track p.id) {
+                <mat-option [value]="p.id">{{ p.nome }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Capacidade</mat-label>
+            <input matInput type="number" formControlName="capacidade" min="1" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Início</mat-label>
+            <input matInput type="datetime-local" formControlName="dataHoraInicio" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Fim</mat-label>
+            <input matInput type="datetime-local" formControlName="dataHoraFim" />
+          </mat-form-field>
+        </div>
+        <div class="flex flex-end gap-8 mt-16">
+          <button type="button" mat-stroked-button (click)="fechar()">Cancelar</button>
+          <button type="submit" mat-flat-button class="btn-green" [disabled]="form.invalid || salvando()">
+            {{ salvando() ? 'Salvando...' : 'Criar Aula' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <table mat-table [dataSource]="aulas()">
+    <ng-container matColumnDef="modalidade">
+      <th mat-header-cell *matHeaderCellDef>Modalidade</th>
+      <td mat-cell *matCellDef="let a">{{ a.modalidade }}</td>
+    </ng-container>
+    <ng-container matColumnDef="professor">
+      <th mat-header-cell *matHeaderCellDef>Professor</th>
+      <td mat-cell *matCellDef="let a">{{ a.professor }}</td>
+    </ng-container>
+    <ng-container matColumnDef="quadra">
+      <th mat-header-cell *matHeaderCellDef>Quadra</th>
+      <td mat-cell *matCellDef="let a">{{ a.quadra }}</td>
+    </ng-container>
+    <ng-container matColumnDef="dataHoraInicio">
+      <th mat-header-cell *matHeaderCellDef>Início</th>
+      <td mat-cell *matCellDef="let a">{{ a.dataHoraInicio | date:'dd/MM/yy HH:mm' }}</td>
+    </ng-container>
+    <ng-container matColumnDef="dataHoraFim">
+      <th mat-header-cell *matHeaderCellDef>Fim</th>
+      <td mat-cell *matCellDef="let a">{{ a.dataHoraFim | date:'HH:mm' }}</td>
+    </ng-container>
+    <ng-container matColumnDef="capacidade">
+      <th mat-header-cell *matHeaderCellDef>Vagas</th>
+      <td mat-cell *matCellDef="let a">{{ a.capacidade }}</td>
+    </ng-container>
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let a">
+        <span [class]="statusClass(a.status)">{{ a.status }}</span>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="acoes">
+      <th mat-header-cell *matHeaderCellDef>Inscritos</th>
+      <td mat-cell *matCellDef="let a">
+        <button mat-icon-button (click)="verInscritos(a)" title="Ver inscritos">
+          <mat-icon style="color:var(--blue)">group</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+    <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
+  </table>
+
+  @if (aulas().length === 0) {
+    <p class="text-center mt-16" style="color:#999">Nenhuma aula cadastrada.</p>
+  }
+</div>
