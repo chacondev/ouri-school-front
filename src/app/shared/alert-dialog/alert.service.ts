@@ -1,6 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
 import { AlertDialogComponent, AlertDialogData } from './alert-dialog';
+import { ConfirmDialogComponent, ConfirmDialogData } from './confirm-dialog';
 
 @Injectable({ providedIn: 'root' })
 export class AlertService {
@@ -23,5 +25,11 @@ export class AlertService {
     this.dialog.open(AlertDialogComponent, {
       data: { mensagem, titulo, tipo: 'sucesso' } as AlertDialogData,
     });
+  }
+
+  confirmar(mensagem: string, titulo?: string): Observable<boolean> {
+    return this.dialog.open(ConfirmDialogComponent, {
+      data: { mensagem, titulo } as ConfirmDialogData,
+    }).afterClosed();
   }
 }

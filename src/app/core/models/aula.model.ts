@@ -25,6 +25,7 @@ export interface AulaAgendaItem {
 
 export interface AulaDisponivel {
   idAula: number;
+  idInscricao?: number;
   modalidade: string;
   professor: string;
   quadra: string;

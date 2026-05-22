@@ -22,6 +22,7 @@ export class AulasAlunoComponent implements OnInit {
   aulas = signal<AulaDisponivel[]>([]);
   colunas = ['modalidade', 'professor', 'quadra', 'inicio', 'vagasDisponiveis', 'acoes'];
   inscrevendo = signal<number | null>(null);
+  cancelando = signal<number | null>(null);
 
   ngOnInit() { this.carregar(); }
 
@@ -38,5 +39,20 @@ export class AulasAlunoComponent implements OnInit {
         this.alert.erro(e?.error?.message ?? 'Não foi possível realizar a inscrição.');
       },
     });
+  }
+
+  desinscriver(a: AulaDisponivel) {
+    this.alert.confirmar(`Deseja cancelar sua inscrição na aula de ${a.modalidade}?`, 'Cancelar Inscrição')
+      .subscribe(confirmado => {
+        if (!confirmado) return;
+        this.cancelando.set(a.idAula);
+        this.inscricaoSvc.cancelar(a.idInscricao!).subscribe({
+          next: () => { this.cancelando.set(null); this.carregar(); },
+          error: (e: any) => {
+            this.cancelando.set(null);
+            this.alert.erro(e?.error?.message ?? 'Não foi possível cancelar a inscrição.');
+          },
+        });
+      });
   }
 }

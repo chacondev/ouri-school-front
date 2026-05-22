@@ -35,8 +35,9 @@
     <ng-container matColumnDef="acoes">
       <th mat-header-cell *matHeaderCellDef>Ação</th>
       <td mat-cell *matCellDef="let i">
-        <button mat-icon-button (click)="cancelarInscricao(i)" title="Cancelar inscrição">
-          <mat-icon style="color:var(--red)">cancel</mat-icon>
+        <button mat-icon-button (click)="cancelarInscricao(i)" title="Cancelar inscrição"
+          [disabled]="cancelando() === i.idInscricao">
+          <mat-icon style="color:var(--red)">{{ cancelando() === i.idInscricao ? 'hourglass_empty' : 'cancel' }}</mat-icon>
         </button>
       </td>
     </ng-container>
