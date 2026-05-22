@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AlunoService } from '../../../core/services/aluno.service';
 import { Aluno } from '../../../core/models/aluno.model';
+import { CryptoService } from '../../../core/services/crypto.service';
 
 @Component({
   selector: 'app-alunos',
@@ -18,11 +19,13 @@ import { Aluno } from '../../../core/models/aluno.model';
 export class AlunosComponent implements OnInit {
   private svc = inject(AlunoService);
   private fb = inject(FormBuilder);
+  private crypto = inject(CryptoService);
 
   alunos = signal<Aluno[]>([]);
   colunas = ['nome', 'email', 'telefone', 'ativo', 'acoes'];
   modoForm = signal<'fechado' | 'novo' | 'editar'>('fechado');
   salvando = signal(false);
+  erro = signal('');
 
   form = this.fb.group({
     id: [null as number | null],
@@ -41,6 +44,7 @@ export class AlunosComponent implements OnInit {
 
   abrirNovo() {
     this.form.reset();
+    this.erro.set('');
     this.form.get('cpf')?.setValidators(Validators.required);
     this.form.get('cpf')?.updateValueAndValidity();
     this.form.get('senha')?.setValidators(Validators.required);
@@ -57,18 +61,30 @@ export class AlunosComponent implements OnInit {
     this.modoForm.set('editar');
   }
 
-  fechar() { this.modoForm.set('fechado'); }
+  fechar() { this.modoForm.set('fechado'); this.erro.set(''); }
 
-  salvar() {
+  async salvar() {
     if (this.form.invalid) return;
     this.salvando.set(true);
+    this.erro.set('');
     const v = this.form.value;
 
-    const req$ = this.modoForm() === 'novo'
-      ? this.svc.cadastrarAluno({ nome: v.nome!, cpf: v.cpf!, email: v.email!, senha: v.senha!, telefone: v.telefone ?? undefined, ativo: true })
-      : this.svc.atualizarAluno({ id: v.id!, nome: v.nome ?? undefined, email: v.email ?? undefined, telefone: v.telefone ?? undefined, senha: v.senha || undefined });
+    let req$;
+    if (this.modoForm() === 'novo') {
+      const senhaCriptografada = await this.crypto.criptografar(v.senha!);
+      req$ = this.svc.cadastrarAluno({ nome: v.nome!, cpf: v.cpf!, email: v.email!, senha: senhaCriptografada, telefone: v.telefone ?? undefined, ativo: true });
+    } else {
+      const senhaCriptografada = v.senha ? await this.crypto.criptografar(v.senha) : undefined;
+      req$ = this.svc.atualizarAluno({ id: v.id!, nome: v.nome ?? undefined, email: v.email ?? undefined, telefone: v.telefone ?? undefined, senha: senhaCriptografada });
+    }
 
-    req$.subscribe({ next: () => { this.salvando.set(false); this.fechar(); this.carregar(); }, error: () => this.salvando.set(false) });
+    req$.subscribe({
+      next: () => { this.salvando.set(false); this.fechar(); this.carregar(); },
+      error: (e: any) => {
+        this.salvando.set(false);
+        this.erro.set(e?.error?.message ?? 'Erro ao salvar aluno.');
+      }
+    });
   }
 
   alterarStatus(a: Aluno) {

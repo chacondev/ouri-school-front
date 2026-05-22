@@ -39,6 +39,9 @@
             <input matInput formControlName="senha" type="password" />
           </mat-form-field>
         </div>
+        @if (erro()) {
+          <p style="color:var(--red);margin-bottom:12px;font-size:0.9rem">{{ erro() }}</p>
+        }
         <div class="flex flex-end gap-8 mt-16">
           <button type="button" mat-stroked-button (click)="fechar()">Cancelar</button>
           <button type="submit" mat-flat-button class="btn-green" [disabled]="form.invalid || salvando()">
