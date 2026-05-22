@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { ProfessorService } from '../../../core/services/professor.service';
 import { AulaService } from '../../../core/services/aula.service';
-import { Aula } from '../../../core/models/aula.model';
+import { AulaAgendaItem } from '../../../core/models/aula.model';
 import { InscritosDialogComponent } from '../../dono/aulas/inscritos-dialog';
 
 @Component({
@@ -20,8 +20,8 @@ export class AgendaProfessorComponent implements OnInit {
   private aulaSvc = inject(AulaService);
   private dialog = inject(MatDialog);
 
-  aulas = signal<Aula[]>([]);
-  colunas = ['modalidade', 'quadra', 'dataHoraInicio', 'dataHoraFim', 'capacidade', 'status', 'acoes'];
+  aulas = signal<AulaAgendaItem[]>([]);
+  colunas = ['modalidade', 'quadra', 'inicio', 'fim', 'limiteAlunos', 'status', 'acoes'];
 
   ngOnInit() { this.carregar(); }
 
@@ -29,17 +29,17 @@ export class AgendaProfessorComponent implements OnInit {
     this.svc.agenda().subscribe(r => this.aulas.set(r.aulas));
   }
 
-  realizarAula(a: Aula) {
+  realizarAula(a: AulaAgendaItem) {
     if (!confirm(`Confirmar que a aula de ${a.modalidade} foi realizada?`)) return;
-    this.aulaSvc.realizarAula(a.id).subscribe(() => this.carregar());
+    this.aulaSvc.realizarAula(a.idAula).subscribe(() => this.carregar());
   }
 
-  cancelarAula(a: Aula) {
+  cancelarAula(a: AulaAgendaItem) {
     if (!confirm(`Cancelar a aula de ${a.modalidade}? Todos os inscritos serão notificados.`)) return;
-    this.aulaSvc.cancelarAula(a.id).subscribe(() => this.carregar());
+    this.aulaSvc.cancelarAula(a.idAula).subscribe(() => this.carregar());
   }
 
-  verInscritos(aula: Aula) {
+  verInscritos(aula: AulaAgendaItem) {
     this.dialog.open(InscritosDialogComponent, { data: aula, width: '500px' });
   }
 

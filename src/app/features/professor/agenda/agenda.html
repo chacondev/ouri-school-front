@@ -12,17 +12,17 @@
       <th mat-header-cell *matHeaderCellDef>Quadra</th>
       <td mat-cell *matCellDef="let a">{{ a.quadra }}</td>
     </ng-container>
-    <ng-container matColumnDef="dataHoraInicio">
+    <ng-container matColumnDef="inicio">
       <th mat-header-cell *matHeaderCellDef>Início</th>
-      <td mat-cell *matCellDef="let a">{{ a.dataHoraInicio | date:'dd/MM/yy HH:mm' }}</td>
+      <td mat-cell *matCellDef="let a">{{ a.inicio | date:'dd/MM/yy HH:mm' }}</td>
     </ng-container>
-    <ng-container matColumnDef="dataHoraFim">
+    <ng-container matColumnDef="fim">
       <th mat-header-cell *matHeaderCellDef>Fim</th>
-      <td mat-cell *matCellDef="let a">{{ a.dataHoraFim | date:'HH:mm' }}</td>
+      <td mat-cell *matCellDef="let a">{{ a.fim | date:'HH:mm' }}</td>
     </ng-container>
-    <ng-container matColumnDef="capacidade">
+    <ng-container matColumnDef="limiteAlunos">
       <th mat-header-cell *matHeaderCellDef>Vagas</th>
-      <td mat-cell *matCellDef="let a">{{ a.capacidade }}</td>
+      <td mat-cell *matCellDef="let a">{{ a.limiteAlunos }}</td>
     </ng-container>
     <ng-container matColumnDef="status">
       <th mat-header-cell *matHeaderCellDef>Status</th>

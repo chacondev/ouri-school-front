@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { UsuarioService } from '../../../core/services/usuario.service';
-import { DadosUsuario } from '../../../core/models/usuario.model';
+import { UsuarioDTO } from '../../../core/models/usuario.model';
 
 @Component({
   selector: 'app-perfil-aluno',
@@ -18,7 +18,7 @@ export class PerfilAlunoComponent implements OnInit {
   private svc = inject(UsuarioService);
   private fb = inject(FormBuilder);
 
-  usuario = signal<DadosUsuario | null>(null);
+  usuario = signal<UsuarioDTO | null>(null);
   modoEdicao = signal(false);
   salvando = signal(false);
   sucesso = signal(false);

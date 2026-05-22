@@ -5,7 +5,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { DonoService } from '../../../core/services/dono.service';
 import { DashboardDonoResponse } from '../../../core/models/dashboard.model';
-import { Aula } from '../../../core/models/aula.model';
 
 @Component({
   selector: 'app-home-dono',
@@ -17,7 +16,7 @@ export class HomeDonoComponent implements OnInit {
   private donoService = inject(DonoService);
 
   dashboard = signal<DashboardDonoResponse | null>(null);
-  colunas = ['modalidade', 'professor', 'dataHoraInicio', 'status'];
+  colunas = ['modalidade', 'professor', 'inicio', 'status'];
 
   ngOnInit() {
     this.donoService.dashboard().subscribe({

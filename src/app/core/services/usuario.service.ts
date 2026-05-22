@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { DadosUsuario, AtualizarUsuarioRequest } from '../models/usuario.model';
+import { map } from 'rxjs/operators';
+import { DadosUsuarioResponse, UsuarioDTO, AtualizarUsuarioRequest } from '../models/usuario.model';
 
 const API = 'http://localhost:8080';
 
@@ -9,7 +10,9 @@ export class UsuarioService {
   private http = inject(HttpClient);
 
   obterDados() {
-    return this.http.get<DadosUsuario>(`${API}/me`);
+    return this.http.get<DadosUsuarioResponse>(`${API}/me`).pipe(
+      map(res => res.usuario)
+    );
   }
 
   atualizar(data: AtualizarUsuarioRequest) {

@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { AlunoService } from '../../../core/services/aluno.service';
 import { InscricaoService } from '../../../core/services/inscricao.service';
 import { DashboardAlunoResponse } from '../../../core/models/dashboard.model';
-import { Inscricao } from '../../../core/models/inscricao.model';
+import { MinhaInscricao } from '../../../core/models/inscricao.model';
 
 @Component({
   selector: 'app-dashboard-aluno',
@@ -20,17 +20,17 @@ export class DashboardAlunoComponent implements OnInit {
   private inscricaoSvc = inject(InscricaoService);
 
   dashboard = signal<DashboardAlunoResponse | null>(null);
-  inscricoes = signal<Inscricao[]>([]);
-  colunas = ['modalidade', 'professor', 'dataHoraInicio', 'acoes'];
+  inscricoes = signal<MinhaInscricao[]>([]);
+  colunas = ['modalidade', 'professor', 'inicio', 'acoes'];
 
   ngOnInit() {
     this.alunoSvc.dashboard().subscribe(d => this.dashboard.set(d));
     this.inscricaoSvc.minhasInscricoes().subscribe(r => this.inscricoes.set(r.inscricoes));
   }
 
-  cancelarInscricao(i: Inscricao) {
+  cancelarInscricao(i: MinhaInscricao) {
     if (!confirm(`Cancelar inscrição na aula de ${i.modalidade}?`)) return;
-    this.inscricaoSvc.cancelar(i.id).subscribe(() => {
+    this.inscricaoSvc.cancelar(i.idInscricao).subscribe(() => {
       this.inscricaoSvc.minhasInscricoes().subscribe(r => this.inscricoes.set(r.inscricoes));
       this.alunoSvc.dashboard().subscribe(d => this.dashboard.set(d));
     });

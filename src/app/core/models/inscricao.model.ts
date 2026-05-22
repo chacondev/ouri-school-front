@@ -1,12 +1,13 @@
-export interface Inscricao {
-  id: number;
+export interface MinhaInscricao {
+  idInscricao: number;
   idAula: number;
   modalidade: string;
-  quadra: string;
   professor: string;
-  dataHoraInicio: string;
-  dataHoraFim: string;
-  status: string;
+  quadra: string;
+  inicio: string;
+  fim: string;
+  vagasDisponiveis: number;
+  dataInscricao: string;
 }
 
 export interface InscricaoRequest {
@@ -14,16 +15,23 @@ export interface InscricaoRequest {
 }
 
 export interface MinhasInscricoesResponse {
-  inscricoes: Inscricao[];
+  inscricoes: MinhaInscricao[];
+  total: number;
 }
 
 export interface Inscrito {
-  id: number;
+  idInscricao: number;
+  idAluno: number;
   nome: string;
   email: string;
+  dataInscricao: string;
 }
 
 export interface ListaInscritosResponse {
+  idAula: number;
+  modalidade: string;
+  quadra: string;
+  limiteAlunos: number;
   inscritos: Inscrito[];
-  totalInscritos: number;
+  total: number;
 }

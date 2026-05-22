@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Aluno, CadastraAlunoRequest, AtualizarAlunoRequest } from '../models/aluno.model';
 import { DashboardAlunoResponse } from '../models/dashboard.model';
-import { Aula } from '../models/aula.model';
+import { HistoricoAlunoResponseDTO } from '../models/historico.model';
 
 const API = 'http://localhost:8080';
 
@@ -15,7 +15,7 @@ export class AlunoService {
   }
 
   dadosAluno(id: number) {
-    return this.http.get<Aluno>(`${API}/aluno/dados-aluno/${id}`);
+    return this.http.get<{ aluno: Aluno }>(`${API}/aluno/dados-aluno/${id}`);
   }
 
   cadastrarAluno(data: CadastraAlunoRequest) {
@@ -39,6 +39,6 @@ export class AlunoService {
   }
 
   historico() {
-    return this.http.get<{ aulas: Aula[] }>(`${API}/aluno/historico`);
+    return this.http.get<HistoricoAlunoResponseDTO>(`${API}/aluno/historico`);
   }
 }

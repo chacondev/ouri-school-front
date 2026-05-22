@@ -10,7 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { DonoService } from '../../../core/services/dono.service';
 import { AulaService } from '../../../core/services/aula.service';
-import { Aula, DadosCriacaoAula } from '../../../core/models/aula.model';
+import { AulaAgendaItem, DadosCriacaoAula } from '../../../core/models/aula.model';
 import { InscritosDialogComponent } from './inscritos-dialog';
 
 @Component({
@@ -29,9 +29,9 @@ export class AulasDonoComponent implements OnInit {
   private fb = inject(FormBuilder);
   private dialog = inject(MatDialog);
 
-  aulas = signal<Aula[]>([]);
+  aulas = signal<AulaAgendaItem[]>([]);
   dadosCriacao = signal<DadosCriacaoAula | null>(null);
-  colunas = ['modalidade', 'professor', 'quadra', 'dataHoraInicio', 'dataHoraFim', 'capacidade', 'status', 'acoes'];
+  colunas = ['modalidade', 'professor', 'quadra', 'inicio', 'fim', 'limiteAlunos', 'status', 'acoes'];
   modoForm = signal(false);
   salvando = signal(false);
 
@@ -39,9 +39,9 @@ export class AulasDonoComponent implements OnInit {
     idModalidade: [null as number | null, Validators.required],
     idQuadra: [null as number | null, Validators.required],
     idProfessor: [null as number | null, Validators.required],
-    dataHoraInicio: ['', Validators.required],
-    dataHoraFim: ['', Validators.required],
-    capacidade: [null as number | null, [Validators.required, Validators.min(1)]],
+    inicio: ['', Validators.required],
+    fim: ['', Validators.required],
+    limiteAlunos: [null as number | null, [Validators.required, Validators.min(1)]],
   });
 
   ngOnInit() {
@@ -64,16 +64,16 @@ export class AulasDonoComponent implements OnInit {
       idModalidade: v.idModalidade!,
       idQuadra: v.idQuadra!,
       idProfessor: v.idProfessor ?? undefined,
-      dataHoraInicio: v.dataHoraInicio!,
-      dataHoraFim: v.dataHoraFim!,
-      capacidade: v.capacidade!,
+      inicio: v.inicio!,
+      fim: v.fim!,
+      limiteAlunos: v.limiteAlunos!,
     }).subscribe({
       next: () => { this.salvando.set(false); this.fechar(); this.carregar(); },
       error: () => this.salvando.set(false),
     });
   }
 
-  verInscritos(aula: Aula) {
+  verInscritos(aula: AulaAgendaItem) {
     this.dialog.open(InscritosDialogComponent, { data: aula, width: '500px' });
   }
 

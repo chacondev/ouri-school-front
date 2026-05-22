@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { AulaService } from '../../../core/services/aula.service';
-import { Aula } from '../../../core/models/aula.model';
+import { AulaAgendaItem } from '../../../core/models/aula.model';
 import { Inscrito } from '../../../core/models/inscricao.model';
 
 @Component({
@@ -16,7 +16,7 @@ import { Inscrito } from '../../../core/models/inscricao.model';
     <h2 mat-dialog-title>Inscritos — {{ aula.modalidade }}</h2>
     <mat-dialog-content>
       <p style="margin-bottom:12px;color:#666;font-size:0.85rem">
-        {{ aula.dataHoraInicio | date:'dd/MM/yyyy HH:mm' }} · {{ aula.quadra }}
+        {{ aula.inicio | date:'dd/MM/yyyy HH:mm' }} · {{ aula.quadra }}
       </p>
       @if (inscritos().length > 0) {
         <table mat-table [dataSource]="inscritos()" style="width:100%">
@@ -41,11 +41,11 @@ import { Inscrito } from '../../../core/models/inscricao.model';
   `,
 })
 export class InscritosDialogComponent implements OnInit {
-  aula: Aula = inject(MAT_DIALOG_DATA);
+  aula: AulaAgendaItem = inject(MAT_DIALOG_DATA);
   private aulaSvc = inject(AulaService);
   inscritos = signal<Inscrito[]>([]);
 
   ngOnInit() {
-    this.aulaSvc.listarInscritos(this.aula.id).subscribe(r => this.inscritos.set(r.inscritos));
+    this.aulaSvc.listarInscritos(this.aula.idAula).subscribe(r => this.inscritos.set(r.inscritos));
   }
 }

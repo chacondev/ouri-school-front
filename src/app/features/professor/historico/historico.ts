@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { ProfessorService } from '../../../core/services/professor.service';
-import { Aula } from '../../../core/models/aula.model';
+import { HistoricoAulaProfessorItem } from '../../../core/models/historico.model';
 
 @Component({
   selector: 'app-historico-professor',
@@ -13,11 +13,11 @@ import { Aula } from '../../../core/models/aula.model';
 })
 export class HistoricoProfessorComponent implements OnInit {
   private svc = inject(ProfessorService);
-  aulas = signal<Aula[]>([]);
-  colunas = ['modalidade', 'quadra', 'dataHoraInicio', 'dataHoraFim', 'status'];
+  aulas = signal<HistoricoAulaProfessorItem[]>([]);
+  colunas = ['modalidade', 'quadra', 'inicio', 'fim', 'totalAlunos', 'statusAula'];
 
   ngOnInit() {
-    this.svc.historico().subscribe(r => this.aulas.set(r.aulas));
+    this.svc.historico().subscribe(r => this.aulas.set(r.historico));
   }
 
   statusClass(status: string) {

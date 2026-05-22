@@ -27,6 +27,7 @@ export class AlunosComponent implements OnInit {
   form = this.fb.group({
     id: [null as number | null],
     nome: ['', Validators.required],
+    cpf: [''],
     email: ['', [Validators.required, Validators.email]],
     telefone: [''],
     senha: [''],
@@ -40,15 +41,19 @@ export class AlunosComponent implements OnInit {
 
   abrirNovo() {
     this.form.reset();
+    this.form.get('cpf')?.setValidators(Validators.required);
+    this.form.get('cpf')?.updateValueAndValidity();
     this.form.get('senha')?.setValidators(Validators.required);
     this.form.get('senha')?.updateValueAndValidity();
     this.modoForm.set('novo');
   }
 
   abrirEditar(a: Aluno) {
+    this.form.get('cpf')?.clearValidators();
+    this.form.get('cpf')?.updateValueAndValidity();
     this.form.get('senha')?.clearValidators();
     this.form.get('senha')?.updateValueAndValidity();
-    this.form.patchValue({ id: a.id, nome: a.nome, email: a.email, telefone: a.telefone ?? '', senha: '' });
+    this.form.patchValue({ id: a.id, nome: a.nome, cpf: a.cpf, email: a.email, telefone: a.telefone ?? '', senha: '' });
     this.modoForm.set('editar');
   }
 
@@ -60,7 +65,7 @@ export class AlunosComponent implements OnInit {
     const v = this.form.value;
 
     const req$ = this.modoForm() === 'novo'
-      ? this.svc.cadastrarAluno({ nome: v.nome!, email: v.email!, senha: v.senha!, telefone: v.telefone ?? undefined })
+      ? this.svc.cadastrarAluno({ nome: v.nome!, cpf: v.cpf!, email: v.email!, senha: v.senha!, telefone: v.telefone ?? undefined, ativo: true })
       : this.svc.atualizarAluno({ id: v.id!, nome: v.nome ?? undefined, email: v.email ?? undefined, telefone: v.telefone ?? undefined, senha: v.senha || undefined });
 
     req$.subscribe({ next: () => { this.salvando.set(false); this.fechar(); this.carregar(); }, error: () => this.salvando.set(false) });

@@ -20,6 +20,12 @@
             <mat-label>Nome</mat-label>
             <input matInput formControlName="nome" />
           </mat-form-field>
+          @if (modoForm() === 'novo') {
+            <mat-form-field appearance="outline">
+              <mat-label>CPF</mat-label>
+              <input matInput formControlName="cpf" />
+            </mat-form-field>
+          }
           <mat-form-field appearance="outline">
             <mat-label>Email</mat-label>
             <input matInput formControlName="email" type="email" />

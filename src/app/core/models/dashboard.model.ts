@@ -1,20 +1,20 @@
-import { Aula } from './aula.model';
+import { AulaResumo } from './aula.model';
 
 export interface DashboardDonoResponse {
-  totalProfessores: number;
   totalAlunos: number;
-  totalAulasHoje: number;
-  totalAulasAgendadas: number;
-  proximasAulas: Aula[];
+  totalProfessores: number;
+  totalModalidades: number;
+  totalQuadras: number;
+  proximasAulas: AulaResumo[];
 }
 
 export interface DashboardProfessorResponse {
+  aulasHoje: number;
   totalAlunosInscritos: number;
-  totalAulasAgendadas: number;
-  proximasAulas: Aula[];
+  proximasAulas: AulaResumo[];
 }
 
 export interface DashboardAlunoResponse {
   totalInscricoesAtivas: number;
-  proximasAulas: Aula[];
+  proximasAulas: AulaResumo[];
 }

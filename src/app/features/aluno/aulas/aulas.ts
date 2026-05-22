@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AulaService } from '../../../core/services/aula.service';
 import { InscricaoService } from '../../../core/services/inscricao.service';
-import { Aula } from '../../../core/models/aula.model';
+import { AulaDisponivel } from '../../../core/models/aula.model';
 
 @Component({
   selector: 'app-aulas-aluno',
@@ -17,8 +17,8 @@ export class AulasAlunoComponent implements OnInit {
   private aulaSvc = inject(AulaService);
   private inscricaoSvc = inject(InscricaoService);
 
-  aulas = signal<Aula[]>([]);
-  colunas = ['modalidade', 'professor', 'quadra', 'dataHoraInicio', 'vagasDisponiveis', 'acoes'];
+  aulas = signal<AulaDisponivel[]>([]);
+  colunas = ['modalidade', 'professor', 'quadra', 'inicio', 'vagasDisponiveis', 'acoes'];
   inscrevendo = signal<number | null>(null);
 
   ngOnInit() { this.carregar(); }
@@ -27,9 +27,9 @@ export class AulasAlunoComponent implements OnInit {
     this.aulaSvc.listarDisponiveis().subscribe(r => this.aulas.set(r.aulas));
   }
 
-  inscrever(a: Aula) {
-    this.inscrevendo.set(a.id);
-    this.inscricaoSvc.inscrever(a.id).subscribe({
+  inscrever(a: AulaDisponivel) {
+    this.inscrevendo.set(a.idAula);
+    this.inscricaoSvc.inscrever(a.idAula).subscribe({
       next: () => { this.inscrevendo.set(null); this.carregar(); },
       error: () => this.inscrevendo.set(null),
     });

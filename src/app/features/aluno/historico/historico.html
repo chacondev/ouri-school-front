@@ -12,18 +12,24 @@
       <th mat-header-cell *matHeaderCellDef>Professor</th>
       <td mat-cell *matCellDef="let a">{{ a.professor }}</td>
     </ng-container>
-    <ng-container matColumnDef="quadra">
-      <th mat-header-cell *matHeaderCellDef>Quadra</th>
-      <td mat-cell *matCellDef="let a">{{ a.quadra }}</td>
-    </ng-container>
-    <ng-container matColumnDef="dataHoraInicio">
+    <ng-container matColumnDef="inicio">
       <th mat-header-cell *matHeaderCellDef>Data</th>
-      <td mat-cell *matCellDef="let a">{{ a.dataHoraInicio | date:'dd/MM/yyyy HH:mm' }}</td>
+      <td mat-cell *matCellDef="let a">{{ a.inicio | date:'dd/MM/yyyy HH:mm' }}</td>
     </ng-container>
-    <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef>Status</th>
+    <ng-container matColumnDef="fim">
+      <th mat-header-cell *matHeaderCellDef>Fim</th>
+      <td mat-cell *matCellDef="let a">{{ a.fim | date:'HH:mm' }}</td>
+    </ng-container>
+    <ng-container matColumnDef="statusInscricao">
+      <th mat-header-cell *matHeaderCellDef>Inscrição</th>
       <td mat-cell *matCellDef="let a">
-        <span [class]="statusClass(a.status)">{{ a.status }}</span>
+        <span [class]="statusClass(a.statusInscricao)">{{ a.statusInscricao }}</span>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="statusAula">
+      <th mat-header-cell *matHeaderCellDef>Status Aula</th>
+      <td mat-cell *matCellDef="let a">
+        <span [class]="statusClass(a.statusAula)">{{ a.statusAula }}</span>
       </td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="colunas"></tr>
