@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable, shareReplay } from 'rxjs';
 import {
   CriarAulaRequest,
   DadosCriacaoAula,
@@ -12,13 +13,17 @@ const API = 'http://localhost:8080';
 @Injectable({ providedIn: 'root' })
 export class AulaService {
   private http = inject(HttpClient);
+  private dadosCriacao$: Observable<DadosCriacaoAula> | null = null;
 
   criarAula(data: CriarAulaRequest) {
     return this.http.post<any>(`${API}/aulas`, data);
   }
 
   obterDadosCriacao() {
-    return this.http.get<DadosCriacaoAula>(`${API}/aulas/obter-dados-criacao`);
+    if (!this.dadosCriacao$) {
+      this.dadosCriacao$ = this.http.get<DadosCriacaoAula>(`${API}/aulas/obter-dados-criacao`).pipe(shareReplay(1));
+    }
+    return this.dadosCriacao$;
   }
 
   listarDisponiveis() {
