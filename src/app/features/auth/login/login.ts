@@ -46,9 +46,9 @@ export class LoginComponent {
     const { email, senha } = this.form.value;
 
     this.auth.login(email!, senha!).subscribe({
-      next: (res) => {
+      next: () => {
         this.loading.set(false);
-        const role = res.role;
+        const role = this.auth.getRole();
         if (role === 'DONO') this.router.navigate(['/dono/home']);
         else if (role === 'PROFESSOR') this.router.navigate(['/professor/dashboard']);
         else this.router.navigate(['/aluno/dashboard']);

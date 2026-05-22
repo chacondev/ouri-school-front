@@ -2,39 +2,58 @@ import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
+import { from, switchMap } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { LoginRequest, LoginResponse, UserRole } from '../models/auth.model';
+import { LoginResponse, UserRole } from '../models/auth.model';
+import { CryptoService } from './crypto.service';
 
 const API = 'http://localhost:8080';
+const CLIENT_HEADER = 'Basic ' + btoa('ouri-school-app:HashAqui!10');
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
   private platformId = inject(PLATFORM_ID);
+  private crypto = inject(CryptoService);
 
   private get isBrowser() {
     return isPlatformBrowser(this.platformId);
   }
 
   login(email: string, senha: string) {
-    const body: LoginRequest = { email, senha };
-    const headers = new HttpHeaders({ Authorization: 'Basic ' + btoa(`${email}:${senha}`) });
-    return this.http.post<LoginResponse>(`${API}/auth/login`, body, { headers }).pipe(
-      tap((res) => {
-        if (this.isBrowser) {
-          localStorage.setItem('token', res.token);
-          localStorage.setItem('role', res.role);
-          localStorage.setItem('nome', res.nome);
-        }
+    return from(this.crypto.criptografar(senha)).pipe(
+      switchMap((senhaCriptografada) => {
+        const headers = new HttpHeaders({ Authorization: CLIENT_HEADER });
+        return this.http
+          .post<LoginResponse>(`${API}/auth/login`, { email, senha: senhaCriptografada }, { headers })
+          .pipe(
+            tap((res) => {
+              if (this.isBrowser) {
+                localStorage.setItem('token', res.accessToken);
+                localStorage.setItem('role', this.extrairRole(res.accessToken));
+                localStorage.setItem('nome', res.nome);
+              }
+            })
+          );
       })
     );
   }
 
-  logout() {
-    if (this.isBrowser) {
-      localStorage.clear();
+  private extrairRole(token: string): UserRole {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const roles: string[] = payload.roles ?? [];
+      if (roles.includes('ROLE_DONO')) return 'DONO';
+      if (roles.includes('ROLE_PROFESSOR')) return 'PROFESSOR';
+      return 'ALUNO';
+    } catch {
+      return 'ALUNO';
     }
+  }
+
+  logout() {
+    if (this.isBrowser) localStorage.clear();
     this.router.navigate(['/login']);
   }
 
@@ -52,9 +71,5 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     return !!this.getToken();
-  }
-
-  getAuthHeader(): string {
-    return `Bearer ${this.getToken()}`;
   }
 }

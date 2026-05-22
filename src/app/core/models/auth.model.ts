@@ -4,11 +4,13 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  token: string;
-  tipo: string;
-  role: 'DONO' | 'PROFESSOR' | 'ALUNO';
+  accessToken: string;
+  tokenType: string;
+  expiresIn: number;
+  idUsuario: number;
   nome: string;
   email: string;
+  idEscola: number;
 }
 
 export type UserRole = 'DONO' | 'PROFESSOR' | 'ALUNO';
