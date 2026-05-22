@@ -18,20 +18,21 @@
         <mat-icon>person</mat-icon> Meu Perfil
       </a>
     </nav>
-    <div class="sidebar-footer">
-      <a (click)="auth.confirmarLogout()">
-        <mat-icon>logout</mat-icon> Sair
-      </a>
-    </div>
   </aside>
 
   <div class="app-main">
     <div class="app-topbar">
       <h1>OURI · Aluno</h1>
-      <div class="user-info">
+      <button class="user-info" [matMenuTriggerFor]="userMenu" style="background:none;border:none;cursor:pointer">
         <mat-icon>account_circle</mat-icon>
         <span>{{ nome }}</span>
-      </div>
+        <mat-icon style="font-size:18px;margin-left:2px">arrow_drop_down</mat-icon>
+      </button>
+      <mat-menu #userMenu="matMenu" xPosition="before">
+        <button mat-menu-item (click)="auth.confirmarLogout()">
+          <mat-icon>logout</mat-icon> Sair
+        </button>
+      </mat-menu>
     </div>
     <div class="app-content">
       <router-outlet />
