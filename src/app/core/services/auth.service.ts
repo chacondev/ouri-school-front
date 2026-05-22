@@ -57,6 +57,12 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
+  confirmarLogout() {
+    if (confirm('Deseja realmente sair?')) {
+      this.logout();
+    }
+  }
+
   getToken(): string | null {
     return this.isBrowser ? localStorage.getItem('token') : null;
   }
