@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { AulaService } from '../../../core/services/aula.service';
 import { InscricaoService } from '../../../core/services/inscricao.service';
 import { AulaDisponivel } from '../../../core/models/aula.model';
+import { AlertService } from '../../../shared/alert-dialog/alert.service';
 
 @Component({
   selector: 'app-aulas-aluno',
@@ -16,6 +17,7 @@ import { AulaDisponivel } from '../../../core/models/aula.model';
 export class AulasAlunoComponent implements OnInit {
   private aulaSvc = inject(AulaService);
   private inscricaoSvc = inject(InscricaoService);
+  private alert = inject(AlertService);
 
   aulas = signal<AulaDisponivel[]>([]);
   colunas = ['modalidade', 'professor', 'quadra', 'inicio', 'vagasDisponiveis', 'acoes'];
@@ -31,7 +33,10 @@ export class AulasAlunoComponent implements OnInit {
     this.inscrevendo.set(a.idAula);
     this.inscricaoSvc.inscrever(a.idAula).subscribe({
       next: () => { this.inscrevendo.set(null); this.carregar(); },
-      error: () => this.inscrevendo.set(null),
+      error: (e: any) => {
+        this.inscrevendo.set(null);
+        this.alert.erro(e?.error?.message ?? 'Não foi possível realizar a inscrição.');
+      },
     });
   }
 }
