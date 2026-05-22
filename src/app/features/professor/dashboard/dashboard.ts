@@ -16,7 +16,7 @@ import { DashboardProfessorResponse } from '../../../core/models/dashboard.model
 export class DashboardProfessorComponent implements OnInit {
   private svc = inject(ProfessorService);
   dashboard = signal<DashboardProfessorResponse | null>(null);
-  colunas = ['modalidade', 'quadra', 'inicio', 'status'];
+  colunas = ['modalidade', 'quadra', 'inicio', 'fim'];
 
   ngOnInit() {
     this.svc.dashboard().subscribe(d => this.dashboard.set(d));

@@ -34,6 +34,7 @@ export const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', loadComponent: () => import('./features/professor/dashboard/dashboard').then(m => m.DashboardProfessorComponent) },
       { path: 'agenda', loadComponent: () => import('./features/professor/agenda/agenda').then(m => m.AgendaProfessorComponent) },
+      { path: 'criar-aula', loadComponent: () => import('./features/professor/criar-aula/criar-aula').then(m => m.CriarAulaProfessorComponent) },
       { path: 'historico', loadComponent: () => import('./features/professor/historico/historico').then(m => m.HistoricoProfessorComponent) },
       { path: 'perfil', loadComponent: () => import('./features/professor/perfil/perfil').then(m => m.PerfilProfessorComponent) },
     ],

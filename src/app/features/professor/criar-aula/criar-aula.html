@@ -1,0 +1,82 @@
+<div class="page-card" style="max-width:560px">
+  <div class="card-header">
+    <h2>Nova Aula</h2>
+  </div>
+
+  @if (dados(); as d) {
+    <form [formGroup]="form" (ngSubmit)="salvar()">
+
+      <!-- Modalidade e Quadra -->
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Modalidade</mat-label>
+          <mat-select formControlName="idModalidade">
+            @for (m of d.modalidades; track m.id) {
+              <mat-option [value]="m.id">{{ m.nome }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Quadra</mat-label>
+          <mat-select formControlName="idQuadra">
+            @for (q of d.quadras; track q.id) {
+              <mat-option [value]="q.id">{{ q.nome }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- Data -->
+      <mat-form-field appearance="outline" style="width:100%;margin-bottom:4px">
+        <mat-label>Data da Aula</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="data" [min]="hoje" readonly />
+        <mat-datepicker-toggle matIconSuffix [for]="picker" />
+        <mat-datepicker #picker />
+      </mat-form-field>
+
+      <!-- Horários -->
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Horário de Início</mat-label>
+          <input matInput [matTimepicker]="tpInicio" formControlName="horaInicio" />
+          <mat-timepicker-toggle matIconSuffix [for]="tpInicio" />
+          <mat-timepicker #tpInicio [interval]="'30min'" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Horário de Término</mat-label>
+          <input matInput [matTimepicker]="tpFim" formControlName="horaFim" />
+          <mat-timepicker-toggle matIconSuffix [for]="tpFim" />
+          <mat-timepicker #tpFim [interval]="'30min'" />
+        </mat-form-field>
+      </div>
+
+      <!-- Limite de alunos e descrição -->
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Limite de Alunos</mat-label>
+          <input matInput type="number" formControlName="limiteAlunos" min="1" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Descrição (opcional)</mat-label>
+          <input matInput formControlName="descricao" />
+        </mat-form-field>
+      </div>
+
+      @if (erro()) {
+        <p style="color:var(--red);margin-bottom:12px;font-size:0.9rem">{{ erro() }}</p>
+      }
+
+      <div class="flex flex-end gap-8 mt-16">
+        <button type="button" mat-stroked-button routerLink="/professor/agenda">Cancelar</button>
+        <button type="submit" mat-flat-button class="btn-green" [disabled]="form.invalid || salvando()">
+          {{ salvando() ? 'Criando...' : 'Criar Aula' }}
+        </button>
+      </div>
+    </form>
+  } @else {
+    <p style="color:#999;text-align:center;padding:24px">Carregando...</p>
+  }
+</div>

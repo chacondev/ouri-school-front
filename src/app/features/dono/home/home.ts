@@ -16,7 +16,7 @@ export class HomeDonoComponent implements OnInit {
   private donoService = inject(DonoService);
 
   dashboard = signal<DashboardDonoResponse | null>(null);
-  colunas = ['modalidade', 'professor', 'inicio', 'status'];
+  colunas = ['modalidade', 'professor', 'inicio', 'fim'];
 
   ngOnInit() {
     this.donoService.dashboard().subscribe({
@@ -24,12 +24,5 @@ export class HomeDonoComponent implements OnInit {
     });
   }
 
-  statusClass(status: string) {
-    const map: Record<string, string> = {
-      AGENDADA: 'badge-blue',
-      REALIZADA: 'badge-green',
-      CANCELADA: 'badge-red',
-    };
-    return 'badge ' + (map[status] ?? 'badge-gray');
-  }
+
 }
