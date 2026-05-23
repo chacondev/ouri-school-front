@@ -1,5 +1,5 @@
 @if (dashboard(); as d) {
-  <div class="dashboard-grid">
+  <div class="dashboard-grid-centered">
     <div class="stat-card">
       <span class="stat-label">Professores</span>
       <span class="stat-value">{{ d.totalProfessores }}</span>
@@ -19,6 +19,7 @@
   </div>
 
   <div class="page-card">
+
     <div class="card-header">
       <h2>Próximas Aulas</h2>
       <a routerLink="/dono/aulas" style="font-size:0.85rem;color:var(--blue)">Ver todas</a>
