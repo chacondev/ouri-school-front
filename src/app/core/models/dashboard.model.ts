@@ -16,9 +16,17 @@ export interface DashboardProfessorResponse {
   proximasAulas: AulaResumo[];
 }
 
+export interface ProgressoModalidade {
+  modalidade: string;
+  quantidade: number;
+}
+
 export interface DashboardAlunoResponse {
   totalInscricoesAtivas: number;
   totalModalidadesPraticadas: number;
   totalHorasEmAula: number;
+  totalAulasPraticadas: number;
+  aulasEsteMes: number;
   proximasAulas: AulaResumo[];
+  progressoMes: ProgressoModalidade[];
 }

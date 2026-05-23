@@ -26,6 +26,8 @@ export class DashboardAlunoComponent implements OnInit {
   colunas = ['modalidade', 'professor', 'inicio', 'acoes'];
   cancelando = signal<number | null>(null);
 
+  meAtual = new Date().toLocaleString('pt-BR', { month: 'long' });
+
   ngOnInit() {
     this.alunoSvc.dashboard().subscribe(d => this.dashboard.set(d));
     this.inscricaoSvc.minhasInscricoes().subscribe(r => this.inscricoes.set(r.inscricoes));
