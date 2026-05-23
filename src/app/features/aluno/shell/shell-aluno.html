@@ -1,20 +1,22 @@
 <div class="app-shell">
-  <aside class="app-sidebar">
+  <div class="sidebar-overlay" [class.aberta]="sidebarAberta()" (click)="fechar()"></div>
+
+  <aside class="app-sidebar" [class.aberta]="sidebarAberta()">
     <div class="sidebar-logo">
       <h2>OURI</h2>
       <small>Sistemas de Gestão</small>
     </div>
     <nav>
-      <a routerLink="/aluno/dashboard" routerLinkActive="active">
+      <a routerLink="/aluno/dashboard" routerLinkActive="active" (click)="fechar()">
         <mat-icon>dashboard</mat-icon> Dashboard
       </a>
-      <a routerLink="/aluno/aulas" routerLinkActive="active">
+      <a routerLink="/aluno/aulas" routerLinkActive="active" (click)="fechar()">
         <mat-icon>sports</mat-icon> Aulas Disponíveis
       </a>
-      <a routerLink="/aluno/historico" routerLinkActive="active">
+      <a routerLink="/aluno/historico" routerLinkActive="active" (click)="fechar()">
         <mat-icon>history</mat-icon> Histórico
       </a>
-      <a routerLink="/aluno/perfil" routerLinkActive="active">
+      <a routerLink="/aluno/perfil" routerLinkActive="active" (click)="fechar()">
         <mat-icon>person</mat-icon> Meu Perfil
       </a>
     </nav>
@@ -22,7 +24,9 @@
 
   <div class="app-main">
     <div class="app-topbar">
-      <h1>OURI · Aluno</h1>
+      <button mat-icon-button (click)="alternar()" style="color:inherit">
+        <mat-icon>menu</mat-icon>
+      </button>
       <span class="topbar-date">{{ hoje }}</span>
       <button class="user-info" [matMenuTriggerFor]="userMenu" style="background:none;border:none;cursor:pointer">
         <mat-icon>account_circle</mat-icon>

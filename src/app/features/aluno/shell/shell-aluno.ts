@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -15,6 +15,10 @@ export class ShellAlunoComponent {
   auth = inject(AuthService);
   nome = this.auth.getNome();
   hoje = this.formatarHoje();
+  sidebarAberta = signal(false);
+
+  fechar() { this.sidebarAberta.set(false); }
+  alternar() { this.sidebarAberta.update(v => !v); }
 
   private formatarHoje(): string {
     const d = new Date();

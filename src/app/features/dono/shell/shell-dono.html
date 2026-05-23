@@ -1,26 +1,28 @@
 <div class="app-shell">
-  <aside class="app-sidebar">
+  <div class="sidebar-overlay" [class.aberta]="sidebarAberta()" (click)="fechar()"></div>
+
+  <aside class="app-sidebar" [class.aberta]="sidebarAberta()">
     <div class="sidebar-logo">
       <h2>OURI</h2>
       <small>Sistemas de Gestão</small>
     </div>
     <nav>
-      <a routerLink="/dono/home" routerLinkActive="active">
+      <a routerLink="/dono/home" routerLinkActive="active" (click)="fechar()">
         <mat-icon>dashboard</mat-icon> Início
       </a>
-      <a routerLink="/dono/professores" routerLinkActive="active">
+      <a routerLink="/dono/professores" routerLinkActive="active" (click)="fechar()">
         <mat-icon>school</mat-icon> Professores
       </a>
-      <a routerLink="/dono/alunos" routerLinkActive="active">
+      <a routerLink="/dono/alunos" routerLinkActive="active" (click)="fechar()">
         <mat-icon>people</mat-icon> Alunos
       </a>
-      <a routerLink="/dono/modalidades" routerLinkActive="active">
+      <a routerLink="/dono/modalidades" routerLinkActive="active" (click)="fechar()">
         <mat-icon>sports</mat-icon> Modalidades
       </a>
-      <a routerLink="/dono/quadras" routerLinkActive="active">
+      <a routerLink="/dono/quadras" routerLinkActive="active" (click)="fechar()">
         <mat-icon>stadium</mat-icon> Quadras
       </a>
-      <a routerLink="/dono/aulas" routerLinkActive="active">
+      <a routerLink="/dono/aulas" routerLinkActive="active" (click)="fechar()">
         <mat-icon>calendar_month</mat-icon> Aulas
       </a>
     </nav>
@@ -28,7 +30,9 @@
 
   <div class="app-main">
     <div class="app-topbar">
-      <h1>OURI · Gestão</h1>
+      <button mat-icon-button (click)="alternar()" style="color:inherit">
+        <mat-icon>menu</mat-icon>
+      </button>
       <span class="topbar-date">{{ hoje }}</span>
       <button class="user-info" [matMenuTriggerFor]="userMenu" style="background:none;border:none;cursor:pointer">
         <mat-icon>account_circle</mat-icon>

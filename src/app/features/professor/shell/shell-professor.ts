@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -17,6 +17,10 @@ export class ShellProfessorComponent implements OnInit {
   private aulaSvc = inject(AulaService);
   nome = this.auth.getNome();
   hoje = this.formatarHoje();
+  sidebarAberta = signal(false);
+
+  fechar() { this.sidebarAberta.set(false); }
+  alternar() { this.sidebarAberta.update(v => !v); }
 
   private formatarHoje(): string {
     const d = new Date();
