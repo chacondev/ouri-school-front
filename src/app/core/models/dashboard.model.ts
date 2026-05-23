@@ -11,6 +11,8 @@ export interface DashboardDonoResponse {
 export interface DashboardProfessorResponse {
   aulasHoje: number;
   totalAlunosInscritos: number;
+  aulasLotadas: number;
+  aulasBaixaOcupacao: number;
   proximasAulas: AulaResumo[];
 }
 
