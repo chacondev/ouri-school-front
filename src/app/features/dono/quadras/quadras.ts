@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
@@ -7,13 +7,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { QuadraService } from '../../../core/services/quadra.service';
 import { Quadra } from '../../../core/models/quadra.model';
 
 @Component({
   selector: 'app-quadras',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatSelectModule],
+  imports: [CommonModule, ReactiveFormsModule, MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatPaginatorModule],
   templateUrl: './quadras.html',
 })
 export class QuadrasComponent implements OnInit {
@@ -25,6 +26,12 @@ export class QuadrasComponent implements OnInit {
   modoForm = signal<'fechado' | 'novo' | 'editar'>('fechado');
   salvando = signal(false);
   erro = signal('');
+  pagina = signal(0);
+  tamanhoPagina = signal(10);
+  paginadas = computed(() => {
+    const start = this.pagina() * this.tamanhoPagina();
+    return this.quadras().slice(start, start + this.tamanhoPagina());
+  });
 
   tipos = ['Society', 'Poliesportiva', 'Natação', 'Tênis', 'Basquete', 'Outro'];
 
@@ -40,6 +47,8 @@ export class QuadrasComponent implements OnInit {
   carregar() {
     this.svc.listar().subscribe(r => this.quadras.set(r.quadras));
   }
+
+  onPage(e: PageEvent) { this.pagina.set(e.pageIndex); this.tamanhoPagina.set(e.pageSize); }
 
   abrirNovo() { this.form.reset(); this.erro.set(''); this.modoForm.set('novo'); }
 

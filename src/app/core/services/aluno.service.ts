@@ -39,7 +39,7 @@ export class AlunoService {
     return this.http.get<DashboardAlunoResponse>(`${API}/aluno/dashboard`);
   }
 
-  historico() {
-    return this.http.get<HistoricoAlunoResponseDTO>(`${API}/aluno/historico`);
+  historico(page = 0, size = 10) {
+    return this.http.get<HistoricoAlunoResponseDTO>(`${API}/aluno/historico`, { params: { page, size } });
   }
 }

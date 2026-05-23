@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
@@ -6,13 +6,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { ModalidadeService } from '../../../core/services/modalidade.service';
 import { Modalidade } from '../../../core/models/modalidade.model';
 
 @Component({
   selector: 'app-modalidades',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule],
+  imports: [CommonModule, ReactiveFormsModule, MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatPaginatorModule],
   templateUrl: './modalidades.html',
 })
 export class ModalidadesComponent implements OnInit {
@@ -23,6 +24,12 @@ export class ModalidadesComponent implements OnInit {
   colunas = ['nome', 'descricao', 'ativo', 'acoes'];
   modoForm = signal<'fechado' | 'novo' | 'editar'>('fechado');
   salvando = signal(false);
+  pagina = signal(0);
+  tamanhoPagina = signal(10);
+  paginadas = computed(() => {
+    const start = this.pagina() * this.tamanhoPagina();
+    return this.modalidades().slice(start, start + this.tamanhoPagina());
+  });
 
   form = this.fb.group({
     id: [null as number | null],
@@ -35,6 +42,8 @@ export class ModalidadesComponent implements OnInit {
   carregar() {
     this.svc.listar().subscribe(r => this.modalidades.set(r.modalidades));
   }
+
+  onPage(e: PageEvent) { this.pagina.set(e.pageIndex); this.tamanhoPagina.set(e.pageSize); }
 
   abrirNovo() { this.form.reset(); this.modoForm.set('novo'); }
 

@@ -26,8 +26,8 @@ export class AulaService {
     return this.dadosCriacao$;
   }
 
-  listarDisponiveis() {
-    return this.http.get<ListaAulasDisponiveisResponse>(`${API}/aulas/disponiveis`);
+  listarDisponiveis(page = 0, size = 10) {
+    return this.http.get<ListaAulasDisponiveisResponse>(`${API}/aulas/disponiveis`, { params: { page, size } });
   }
 
   listarInscritos(idAula: number) {

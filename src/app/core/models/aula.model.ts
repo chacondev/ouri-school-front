@@ -58,6 +58,10 @@ export interface AgendaAulasResponse {
 export interface ListaAulasDisponiveisResponse {
   aulas: AulaDisponivel[];
   total: number;
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
 }
 
 export interface DadosCriacaoAula {

@@ -45,7 +45,7 @@
     </div>
   }
 
-  <table mat-table [dataSource]="quadras()">
+  <table mat-table [dataSource]="paginadas()">
     <ng-container matColumnDef="nome">
       <th mat-header-cell *matHeaderCellDef>Nome</th>
       <td mat-cell *matCellDef="let q">{{ q.nome }}</td>
@@ -91,4 +91,13 @@
   @if (quadras().length === 0) {
     <p class="text-center mt-16" style="color:#999">Nenhuma quadra cadastrada.</p>
   }
+
+  <mat-paginator
+    [length]="quadras().length"
+    [pageSize]="tamanhoPagina()"
+    [pageIndex]="pagina()"
+    [pageSizeOptions]="[5, 10, 25]"
+    (page)="onPage($event)"
+    showFirstLastButtons>
+  </mat-paginator>
 </div>

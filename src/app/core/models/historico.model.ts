@@ -11,6 +11,10 @@ export interface HistoricoAulaAlunoItem {
 export interface HistoricoAlunoResponseDTO {
   historico: HistoricoAulaAlunoItem[];
   totalAulas: number;
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
 }
 
 export interface HistoricoAulaProfessorItem {
@@ -26,4 +30,8 @@ export interface HistoricoAulaProfessorItem {
 export interface HistoricoProfessorResponseDTO {
   historico: HistoricoAulaProfessorItem[];
   totalAulas: number;
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
 }

@@ -63,4 +63,13 @@
   @if (aulas().length === 0) {
     <p class="text-center mt-16" style="color:#999">Nenhuma aula disponível no momento.</p>
   }
+
+  <mat-paginator
+    [length]="total()"
+    [pageSize]="tamanhoPagina()"
+    [pageIndex]="pagina()"
+    [pageSizeOptions]="[5, 10, 25]"
+    (page)="onPage($event)"
+    showFirstLastButtons>
+  </mat-paginator>
 </div>

@@ -18,7 +18,7 @@ export class ProfessorService {
     return this.http.get<AgendaAulasResponse>(`${API}/professor/agenda`, { params: { page, size } });
   }
 
-  historico() {
-    return this.http.get<HistoricoProfessorResponseDTO>(`${API}/professor/historico`);
+  historico(page = 0, size = 10) {
+    return this.http.get<HistoricoProfessorResponseDTO>(`${API}/professor/historico`, { params: { page, size } });
   }
 }
