@@ -175,6 +175,16 @@ body {
   align-items: center;
   justify-content: space-between;
   flex-shrink: 0;
+  position: relative;
+}
+
+.app-topbar .topbar-date {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.85rem;
+  opacity: 0.85;
+  pointer-events: none;
 }
 
 .app-topbar h1 {

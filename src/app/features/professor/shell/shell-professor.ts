@@ -16,6 +16,14 @@ export class ShellProfessorComponent implements OnInit {
   auth = inject(AuthService);
   private aulaSvc = inject(AulaService);
   nome = this.auth.getNome();
+  hoje = this.formatarHoje();
+
+  private formatarHoje(): string {
+    const d = new Date();
+    const dia = d.toLocaleDateString('pt-BR', { weekday: 'long' });
+    const data = d.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
+    return `${dia.charAt(0).toUpperCase() + dia.slice(1)}, ${data}`;
+  }
 
   ngOnInit() {
     this.aulaSvc.obterDadosCriacao().subscribe();
