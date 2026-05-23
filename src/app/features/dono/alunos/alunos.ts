@@ -109,7 +109,12 @@ export class AlunosComponent implements OnInit, OnDestroy {
     }
 
     req$.subscribe({
-      next: () => { this.salvando.set(false); this.fechar(); this.carregar(); },
+      next: () => {
+        this.salvando.set(false);
+        this.alert.notificar(this.modoForm() === 'novo' ? 'Aluno cadastrado com sucesso!' : 'Aluno atualizado com sucesso!');
+        this.fechar();
+        this.carregar();
+      },
       error: (e: any) => {
         this.salvando.set(false);
         this.erro.set(e?.error?.message ?? 'Erro ao salvar aluno.');
@@ -118,11 +123,19 @@ export class AlunosComponent implements OnInit, OnDestroy {
   }
 
   alterarStatus(a: Aluno) {
-    this.svc.alterarStatus(a.id, !a.ativo).subscribe(() => this.carregar());
+    this.svc.alterarStatus(a.id, !a.ativo).subscribe(() => {
+      this.alert.notificar(`Aluno ${a.ativo ? 'desativado' : 'ativado'} com sucesso!`);
+      this.carregar();
+    });
   }
 
   excluir(a: Aluno) {
     this.alert.confirmar(`Excluir aluno ${a.nome}? Esta ação não pode ser desfeita.`, 'Excluir Aluno')
-      .subscribe(ok => { if (ok) this.svc.deletarAluno(a.id).subscribe(() => this.carregar()); });
+      .subscribe(ok => {
+        if (ok) this.svc.deletarAluno(a.id).subscribe(() => {
+          this.alert.notificar('Aluno excluído com sucesso!');
+          this.carregar();
+        });
+      });
   }
 }

@@ -78,15 +78,31 @@ export class ModalidadesComponent implements OnInit {
       ? this.svc.cadastrar({ nome: v.nome!, descricao: v.descricao ?? undefined })
       : this.svc.atualizar({ id: v.id!, nome: v.nome!, descricao: v.descricao ?? undefined });
 
-    req$.subscribe({ next: () => { this.salvando.set(false); this.fechar(); this.carregar(); }, error: () => this.salvando.set(false) });
+    req$.subscribe({
+      next: () => {
+        this.salvando.set(false);
+        this.alert.notificar(this.modoForm() === 'novo' ? 'Modalidade cadastrada com sucesso!' : 'Modalidade atualizada com sucesso!');
+        this.fechar();
+        this.carregar();
+      },
+      error: () => this.salvando.set(false),
+    });
   }
 
   alterarStatus(m: Modalidade) {
-    this.svc.alterarStatus(m.id, !m.ativo).subscribe(() => this.carregar());
+    this.svc.alterarStatus(m.id, !m.ativo).subscribe(() => {
+      this.alert.notificar(`Modalidade ${m.ativo ? 'desativada' : 'ativada'} com sucesso!`);
+      this.carregar();
+    });
   }
 
   excluir(m: Modalidade) {
     this.alert.confirmar(`Excluir modalidade ${m.nome}? Esta ação não pode ser desfeita.`, 'Excluir Modalidade')
-      .subscribe(ok => { if (ok) this.svc.deletar(m.id).subscribe(() => this.carregar()); });
+      .subscribe(ok => {
+        if (ok) this.svc.deletar(m.id).subscribe(() => {
+          this.alert.notificar('Modalidade excluída com sucesso!');
+          this.carregar();
+        });
+      });
   }
 }

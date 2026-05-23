@@ -49,7 +49,7 @@ export class AulasAlunoComponent implements OnInit {
   inscrever(a: AulaDisponivel) {
     this.inscrevendo.set(a.idAula);
     this.inscricaoSvc.inscrever(a.idAula).subscribe({
-      next: () => { this.inscrevendo.set(null); this.carregar(); },
+      next: () => { this.inscrevendo.set(null); this.alert.notificar('Inscrição realizada com sucesso!'); this.carregar(); },
       error: (e: any) => {
         this.inscrevendo.set(null);
         this.alert.erro(e?.error?.message ?? 'Não foi possível realizar a inscrição.');
@@ -63,7 +63,7 @@ export class AulasAlunoComponent implements OnInit {
         if (!confirmado) return;
         this.cancelando.set(a.idAula);
         this.inscricaoSvc.cancelar(a.idInscricao!).subscribe({
-          next: () => { this.cancelando.set(null); this.carregar(); },
+          next: () => { this.cancelando.set(null); this.alert.notificar('Inscrição cancelada!'); this.carregar(); },
           error: (e: any) => {
             this.cancelando.set(null);
             this.alert.erro(e?.error?.message ?? 'Não foi possível cancelar a inscrição.');

@@ -95,7 +95,12 @@ export class AulasDonoComponent implements OnInit {
       fim: v.fim!,
       limiteAlunos: v.limiteAlunos!,
     }).subscribe({
-      next: () => { this.salvando.set(false); this.fechar(); this.carregar(); },
+      next: () => {
+        this.salvando.set(false);
+        this.alert.notificar('Aula criada com sucesso!');
+        this.fechar();
+        this.carregar();
+      },
       error: () => this.salvando.set(false),
     });
   }
@@ -109,7 +114,7 @@ export class AulasDonoComponent implements OnInit {
       .subscribe(ok => {
         if (!ok) return;
         this.aulaSvc.realizarAulaDono(aula.idAula).subscribe({
-          next: () => this.carregar(),
+          next: () => { this.alert.notificar('Aula marcada como realizada!'); this.carregar(); },
           error: (e: any) => this.alert.erro(e?.error?.message ?? 'Não foi possível realizar a aula.'),
         });
       });
@@ -120,7 +125,7 @@ export class AulasDonoComponent implements OnInit {
       .subscribe(ok => {
         if (!ok) return;
         this.aulaSvc.cancelarAulaDono(aula.idAula).subscribe({
-          next: () => this.carregar(),
+          next: () => { this.alert.notificar('Aula cancelada com sucesso!'); this.carregar(); },
           error: (e: any) => this.alert.erro(e?.error?.message ?? 'Não foi possível cancelar a aula.'),
         });
       });

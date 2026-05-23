@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { UsuarioService } from '../../../core/services/usuario.service';
 import { UsuarioDTO } from '../../../core/models/usuario.model';
+import { AlertService } from '../../../shared/alert-dialog/alert.service';
 
 @Component({
   selector: 'app-perfil-dono',
@@ -17,11 +18,11 @@ import { UsuarioDTO } from '../../../core/models/usuario.model';
 export class PerfilDonoComponent implements OnInit {
   private svc = inject(UsuarioService);
   private fb = inject(FormBuilder);
+  private alert = inject(AlertService);
 
   usuario = signal<UsuarioDTO | null>(null);
   modoEdicao = signal(false);
   salvando = signal(false);
-  sucesso = signal(false);
 
   form = this.fb.group({
     nome: ['', Validators.required],
@@ -42,7 +43,7 @@ export class PerfilDonoComponent implements OnInit {
     this.salvando.set(true);
     const v = this.form.value;
     this.svc.atualizar({ nome: v.nome!, email: v.email!, telefone: v.telefone ?? undefined, senha: v.senha || undefined }).subscribe({
-      next: () => { this.salvando.set(false); this.modoEdicao.set(false); this.sucesso.set(true); setTimeout(() => this.sucesso.set(false), 3000); this.ngOnInit(); },
+      next: () => { this.salvando.set(false); this.modoEdicao.set(false); this.alert.notificar('Perfil atualizado com sucesso!'); this.ngOnInit(); },
       error: () => this.salvando.set(false),
     });
   }

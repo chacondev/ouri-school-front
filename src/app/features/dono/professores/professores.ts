@@ -123,7 +123,12 @@ export class ProfessoresComponent implements OnInit, OnDestroy {
     }
 
     req$.subscribe({
-      next: () => { this.salvando.set(false); this.fechar(); this.carregar(); },
+      next: () => {
+        this.salvando.set(false);
+        this.alert.notificar(this.modoForm() === 'novo' ? 'Professor cadastrado com sucesso!' : 'Professor atualizado com sucesso!');
+        this.fechar();
+        this.carregar();
+      },
       error: (e: any) => {
         this.salvando.set(false);
         this.erro.set(e?.error?.message ?? 'Erro ao salvar professor.');
@@ -132,11 +137,19 @@ export class ProfessoresComponent implements OnInit, OnDestroy {
   }
 
   alterarStatus(p: Professor) {
-    this.svc.alterarStatusProfessor(p.id, !p.ativo).subscribe(() => this.carregar());
+    this.svc.alterarStatusProfessor(p.id, !p.ativo).subscribe(() => {
+      this.alert.notificar(`Professor ${p.ativo ? 'desativado' : 'ativado'} com sucesso!`);
+      this.carregar();
+    });
   }
 
   excluir(p: Professor) {
     this.alert.confirmar(`Excluir professor ${p.nome}? Esta ação não pode ser desfeita.`, 'Excluir Professor')
-      .subscribe(ok => { if (ok) this.svc.deletarProfessor(p.id).subscribe(() => this.carregar()); });
+      .subscribe(ok => {
+        if (ok) this.svc.deletarProfessor(p.id).subscribe(() => {
+          this.alert.notificar('Professor excluído com sucesso!');
+          this.carregar();
+        });
+      });
   }
 }

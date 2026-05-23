@@ -52,7 +52,7 @@ export class AgendaProfessorComponent implements OnInit {
       .subscribe(ok => {
         if (!ok) return;
         this.aulaSvc.realizarAula(a.idAula).subscribe({
-          next: () => this.carregar(),
+          next: () => { this.alert.notificar('Aula marcada como realizada!'); this.carregar(); },
           error: (e: any) => this.alert.erro(e?.error?.message ?? 'Não foi possível realizar a aula.'),
         });
       });
@@ -63,7 +63,7 @@ export class AgendaProfessorComponent implements OnInit {
       .subscribe(ok => {
         if (!ok) return;
         this.aulaSvc.cancelarAula(a.idAula).subscribe({
-          next: () => this.carregar(),
+          next: () => { this.alert.notificar('Aula cancelada com sucesso!'); this.carregar(); },
           error: (e: any) => this.alert.erro(e?.error?.message ?? 'Não foi possível cancelar a aula.'),
         });
       });

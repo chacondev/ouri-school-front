@@ -86,17 +86,30 @@ export class QuadrasComponent implements OnInit {
       : this.svc.atualizar({ id: v.id!, nome: v.nome!, tipo: v.tipo!, descricao: v.descricao ?? undefined, ativa: true });
 
     req$.subscribe({
-      next: () => { this.salvando.set(false); this.fechar(); this.carregar(); },
+      next: () => {
+        this.salvando.set(false);
+        this.alert.notificar(this.modoForm() === 'novo' ? 'Quadra cadastrada com sucesso!' : 'Quadra atualizada com sucesso!');
+        this.fechar();
+        this.carregar();
+      },
       error: (e: any) => { this.salvando.set(false); this.erro.set(e?.error?.message ?? 'Erro ao salvar quadra.'); }
     });
   }
 
   alterarStatus(q: Quadra) {
-    this.svc.alterarStatus(q.id, !q.ativa).subscribe(() => this.carregar());
+    this.svc.alterarStatus(q.id, !q.ativa).subscribe(() => {
+      this.alert.notificar(`Quadra ${q.ativa ? 'desativada' : 'ativada'} com sucesso!`);
+      this.carregar();
+    });
   }
 
   excluir(q: Quadra) {
     this.alert.confirmar(`Excluir quadra ${q.nome}? Esta ação não pode ser desfeita.`, 'Excluir Quadra')
-      .subscribe(ok => { if (ok) this.svc.deletar(q.id).subscribe(() => this.carregar()); });
+      .subscribe(ok => {
+        if (ok) this.svc.deletar(q.id).subscribe(() => {
+          this.alert.notificar('Quadra excluída com sucesso!');
+          this.carregar();
+        });
+      });
   }
 }
