@@ -9,15 +9,17 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AlunoService } from '../../../core/services/aluno.service';
 import { Aluno } from '../../../core/models/aluno.model';
 import { CryptoService } from '../../../core/services/crypto.service';
 import { AlertService } from '../../../shared/alert-dialog/alert.service';
+import { HistoricoAlunoDialogComponent } from './historico-aluno-dialog';
 
 @Component({
   selector: 'app-alunos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatPaginatorModule, MatProgressBarModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatPaginatorModule, MatProgressBarModule, MatDialogModule],
   templateUrl: './alunos.html',
 })
 export class AlunosComponent implements OnInit, OnDestroy {
@@ -25,6 +27,7 @@ export class AlunosComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private crypto = inject(CryptoService);
   private alert = inject(AlertService);
+  private dialog = inject(MatDialog);
 
   alunos = signal<Aluno[]>([]);
   colunas = ['nome', 'email', 'telefone', 'ativo', 'acoes'];
@@ -137,5 +140,9 @@ export class AlunosComponent implements OnInit, OnDestroy {
           this.carregar();
         });
       });
+  }
+
+  verHistorico(a: Aluno) {
+    this.dialog.open(HistoricoAlunoDialogComponent, { data: a, width: '90vw', maxWidth: '90vw', maxHeight: '90vh' });
   }
 }

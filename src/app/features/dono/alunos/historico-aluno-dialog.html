@@ -1,0 +1,55 @@
+<h2 mat-dialog-title style="text-align:center">Histórico de Aulas — {{ aluno.nome }}</h2>
+
+<mat-dialog-content style="width:100%;padding:0 0 8px">
+  @if (carregando()) { <mat-progress-bar mode="indeterminate" /> }
+
+  <table mat-table [dataSource]="historico()" style="width:100%">
+    <ng-container matColumnDef="modalidade">
+      <th mat-header-cell *matHeaderCellDef>Modalidade</th>
+      <td mat-cell *matCellDef="let h">{{ h.modalidade }}</td>
+    </ng-container>
+    <ng-container matColumnDef="professor">
+      <th mat-header-cell *matHeaderCellDef>Professor</th>
+      <td mat-cell *matCellDef="let h">{{ h.professor }}</td>
+    </ng-container>
+    <ng-container matColumnDef="inicio">
+      <th mat-header-cell *matHeaderCellDef>Data</th>
+      <td mat-cell *matCellDef="let h">{{ h.inicio | date:'dd/MM/yyyy HH:mm' }}</td>
+    </ng-container>
+    <ng-container matColumnDef="fim">
+      <th mat-header-cell *matHeaderCellDef>Fim</th>
+      <td mat-cell *matCellDef="let h">{{ h.fim | date:'HH:mm' }}</td>
+    </ng-container>
+    <ng-container matColumnDef="statusInscricao">
+      <th mat-header-cell *matHeaderCellDef>Inscrição</th>
+      <td mat-cell *matCellDef="let h">
+        <span [class]="statusInscricaoClass(h.statusInscricao)">{{ h.statusInscricao }}</span>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="statusAula">
+      <th mat-header-cell *matHeaderCellDef>Aula</th>
+      <td mat-cell *matCellDef="let h">
+        <span [class]="statusAulaClass(h.statusAula)">{{ h.statusAula }}</span>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+    <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
+  </table>
+
+  @if (historico().length === 0 && !carregando()) {
+    <p style="text-align:center;color:#999;padding:24px 0">Nenhuma aula no histórico.</p>
+  }
+
+  <mat-paginator
+    [length]="total()"
+    [pageSize]="tamanhoPagina()"
+    [pageIndex]="pagina()"
+    [pageSizeOptions]="[5, 10, 25]"
+    (page)="onPage($event)"
+    showFirstLastButtons>
+  </mat-paginator>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Fechar</button>
+</mat-dialog-actions>

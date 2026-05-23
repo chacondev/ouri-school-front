@@ -344,3 +344,8 @@ mat-form-field { width: 100%; }
 .flex { display: flex; }
 .flex-end { justify-content: flex-end; }
 .align-center { align-items: center; }
+
+/* Corrige preenchimento do botão selecionado em mat-button-toggle-group com flex-wrap */
+.mat-button-toggle .mat-button-toggle-button {
+  width: 100%;
+}

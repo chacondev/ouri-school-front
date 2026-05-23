@@ -26,8 +26,14 @@ export class AulaService {
     return this.dadosCriacao$;
   }
 
-  listarDisponiveis(page = 0, size = 10) {
-    return this.http.get<ListaAulasDisponiveisResponse>(`${API}/aulas/disponiveis`, { params: { page, size } });
+  listarDisponiveis(page = 0, size = 10, modalidade?: string) {
+    const params: Record<string, any> = { page, size };
+    if (modalidade) params['modalidade'] = modalidade;
+    return this.http.get<ListaAulasDisponiveisResponse>(`${API}/aulas/disponiveis`, { params });
+  }
+
+  listarModalidadesDisponiveis() {
+    return this.http.get<string[]>(`${API}/aulas/modalidades-disponiveis`);
   }
 
   listarInscritos(idAula: number) {

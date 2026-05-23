@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatChipsModule } from '@angular/material/chips';
 import { AulaService } from '../../../core/services/aula.service';
 import { InscricaoService } from '../../../core/services/inscricao.service';
 import { AulaDisponivel } from '../../../core/models/aula.model';
@@ -13,7 +14,7 @@ import { AlertService } from '../../../shared/alert-dialog/alert.service';
 @Component({
   selector: 'app-aulas-aluno',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, MatPaginatorModule, MatProgressBarModule],
+  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, MatPaginatorModule, MatProgressBarModule, MatChipsModule],
   templateUrl: './aulas.html',
 })
 export class AulasAlunoComponent implements OnInit {
@@ -22,6 +23,8 @@ export class AulasAlunoComponent implements OnInit {
   private alert = inject(AlertService);
 
   aulas = signal<AulaDisponivel[]>([]);
+  modalidades = signal<string[]>([]);
+  filtroModalidade = signal<string>('');
   colunas = ['modalidade', 'professor', 'quadra', 'inicio', 'vagasDisponiveis', 'acoes'];
   carregando = signal(false);
   inscrevendo = signal<number | null>(null);
@@ -30,14 +33,23 @@ export class AulasAlunoComponent implements OnInit {
   tamanhoPagina = signal(10);
   total = signal(0);
 
-  ngOnInit() { this.carregar(); }
+  ngOnInit() {
+    this.aulaSvc.listarModalidadesDisponiveis().subscribe(m => this.modalidades.set(m));
+    this.carregar();
+  }
 
   carregar() {
     this.carregando.set(true);
-    this.aulaSvc.listarDisponiveis(this.pagina(), this.tamanhoPagina()).subscribe({
+    this.aulaSvc.listarDisponiveis(this.pagina(), this.tamanhoPagina(), this.filtroModalidade() || undefined).subscribe({
       next: r => { this.aulas.set(r.aulas); this.total.set(r.totalElements); this.carregando.set(false); },
       error: () => this.carregando.set(false),
     });
+  }
+
+  onFiltroModalidade(modalidade: string) {
+    this.filtroModalidade.set(modalidade);
+    this.pagina.set(0);
+    this.carregar();
   }
 
   onPage(e: PageEvent) {

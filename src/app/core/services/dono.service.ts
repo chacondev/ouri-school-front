@@ -45,4 +45,8 @@ export class DonoService {
     if (status) params['status'] = status;
     return this.http.get<AgendaAulasResponse>(`${API}/dono/aulas`, { params });
   }
+
+  historicoAluno(idAluno: number, page = 0, size = 10) {
+    return this.http.get<any>(`${API}/dono/alunos/${idAluno}/historico`, { params: { page, size } });
+  }
 }

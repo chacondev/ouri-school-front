@@ -3,6 +3,17 @@
     <h2>Aulas Disponíveis</h2>
   </div>
 
+  @if (modalidades().length > 0) {
+    <div style="margin-bottom:12px">
+      <mat-chip-listbox [value]="filtroModalidade()" (change)="onFiltroModalidade($event.value)">
+        <mat-chip-option value="">Todas</mat-chip-option>
+        @for (m of modalidades(); track m) {
+          <mat-chip-option [value]="m">{{ m }}</mat-chip-option>
+        }
+      </mat-chip-listbox>
+    </div>
+  }
+
   @if (carregando()) { <mat-progress-bar mode="indeterminate" /> }
   <table mat-table [dataSource]="aulas()">
     <ng-container matColumnDef="modalidade">
