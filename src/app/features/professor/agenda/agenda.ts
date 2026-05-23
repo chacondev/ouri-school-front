@@ -5,20 +5,23 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ProfessorService } from '../../../core/services/professor.service';
 import { AulaService } from '../../../core/services/aula.service';
+import { AlertService } from '../../../shared/alert-dialog/alert.service';
 import { AulaAgendaItem } from '../../../core/models/aula.model';
 import { InscritosDialogComponent } from '../../dono/aulas/inscritos-dialog';
 
 @Component({
   selector: 'app-agenda-professor',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, MatDialogModule, MatPaginatorModule],
+  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, MatDialogModule, MatPaginatorModule, MatProgressBarModule],
   templateUrl: './agenda.html',
 })
 export class AgendaProfessorComponent implements OnInit {
   private svc = inject(ProfessorService);
   private aulaSvc = inject(AulaService);
+  private alert = inject(AlertService);
   private dialog = inject(MatDialog);
 
   aulas = signal<AulaAgendaItem[]>([]);
@@ -26,13 +29,15 @@ export class AgendaProfessorComponent implements OnInit {
   pagina = signal(0);
   tamanhoPagina = signal(10);
   total = signal(0);
+  carregando = signal(false);
 
   ngOnInit() { this.carregar(); }
 
   carregar() {
-    this.svc.agenda(this.pagina(), this.tamanhoPagina()).subscribe(r => {
-      this.aulas.set(r.aulas);
-      this.total.set(r.totalElements);
+    this.carregando.set(true);
+    this.svc.agenda(this.pagina(), this.tamanhoPagina()).subscribe({
+      next: r => { this.aulas.set(r.aulas); this.total.set(r.totalElements); this.carregando.set(false); },
+      error: () => this.carregando.set(false),
     });
   }
 
@@ -43,13 +48,25 @@ export class AgendaProfessorComponent implements OnInit {
   }
 
   realizarAula(a: AulaAgendaItem) {
-    if (!confirm(`Confirmar que a aula de ${a.modalidade} foi realizada?`)) return;
-    this.aulaSvc.realizarAula(a.idAula).subscribe(() => this.carregar());
+    this.alert.confirmar(`Confirmar que a aula de ${a.modalidade} foi realizada?`, 'Marcar como Realizada')
+      .subscribe(ok => {
+        if (!ok) return;
+        this.aulaSvc.realizarAula(a.idAula).subscribe({
+          next: () => this.carregar(),
+          error: (e: any) => this.alert.erro(e?.error?.message ?? 'Não foi possível realizar a aula.'),
+        });
+      });
   }
 
   cancelarAula(a: AulaAgendaItem) {
-    if (!confirm(`Cancelar a aula de ${a.modalidade}? Todos os inscritos serão notificados.`)) return;
-    this.aulaSvc.cancelarAula(a.idAula).subscribe(() => this.carregar());
+    this.alert.confirmar(`Cancelar a aula de ${a.modalidade}? Todos os inscritos serão afetados.`, 'Cancelar Aula')
+      .subscribe(ok => {
+        if (!ok) return;
+        this.aulaSvc.cancelarAula(a.idAula).subscribe({
+          next: () => this.carregar(),
+          error: (e: any) => this.alert.erro(e?.error?.message ?? 'Não foi possível cancelar a aula.'),
+        });
+      });
   }
 
   verInscritos(aula: AulaAgendaItem) {

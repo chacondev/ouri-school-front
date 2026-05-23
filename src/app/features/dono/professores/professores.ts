@@ -10,9 +10,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { DonoService } from '../../../core/services/dono.service';
 import { Professor } from '../../../core/models/professor.model';
 import { CryptoService } from '../../../core/services/crypto.service';
+import { AlertService } from '../../../shared/alert-dialog/alert.service';
 
 @Component({
   selector: 'app-professores',
@@ -28,6 +30,7 @@ import { CryptoService } from '../../../core/services/crypto.service';
     MatInputModule,
     MatSlideToggleModule,
     MatPaginatorModule,
+    MatProgressBarModule,
   ],
   templateUrl: './professores.html',
 })
@@ -35,6 +38,7 @@ export class ProfessoresComponent implements OnInit, OnDestroy {
   private svc = inject(DonoService);
   private fb = inject(FormBuilder);
   private crypto = inject(CryptoService);
+  private alert = inject(AlertService);
 
   professores = signal<Professor[]>([]);
   colunas = ['nome', 'email', 'telefone', 'ativo', 'acoes'];
@@ -44,6 +48,7 @@ export class ProfessoresComponent implements OnInit, OnDestroy {
   pagina = signal(0);
   tamanhoPagina = signal(10);
   total = signal(0);
+  carregando = signal(false);
   termoBusca = '';
   private busca$ = new Subject<string>();
   private destroy$ = new Subject<void>();
@@ -66,9 +71,10 @@ export class ProfessoresComponent implements OnInit, OnDestroy {
   ngOnDestroy() { this.destroy$.next(); this.destroy$.complete(); }
 
   carregar() {
-    this.svc.listarProfessores(this.pagina(), this.tamanhoPagina(), this.termoBusca || undefined).subscribe(r => {
-      this.professores.set(r.professores);
-      this.total.set(r.totalElements);
+    this.carregando.set(true);
+    this.svc.listarProfessores(this.pagina(), this.tamanhoPagina(), this.termoBusca || undefined).subscribe({
+      next: r => { this.professores.set(r.professores); this.total.set(r.totalElements); this.carregando.set(false); },
+      error: () => this.carregando.set(false),
     });
   }
 
@@ -130,7 +136,7 @@ export class ProfessoresComponent implements OnInit, OnDestroy {
   }
 
   excluir(p: Professor) {
-    if (!confirm(`Excluir professor ${p.nome}?`)) return;
-    this.svc.deletarProfessor(p.id).subscribe(() => this.carregar());
+    this.alert.confirmar(`Excluir professor ${p.nome}? Esta ação não pode ser desfeita.`, 'Excluir Professor')
+      .subscribe(ok => { if (ok) this.svc.deletarProfessor(p.id).subscribe(() => this.carregar()); });
   }
 }

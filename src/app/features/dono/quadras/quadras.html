@@ -53,6 +53,7 @@
     </div>
   }
 
+  @if (carregando()) { <mat-progress-bar mode="indeterminate" /> }
   <table mat-table [dataSource]="paginadas()">
     <ng-container matColumnDef="nome">
       <th mat-header-cell *matHeaderCellDef>Nome</th>

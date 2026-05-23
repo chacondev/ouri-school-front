@@ -3,6 +3,7 @@
     <h2>Histórico de Aulas</h2>
   </div>
 
+  @if (carregando()) { <mat-progress-bar mode="indeterminate" /> }
   <table mat-table [dataSource]="aulas()">
     <ng-container matColumnDef="modalidade">
       <th mat-header-cell *matHeaderCellDef>Modalidade</th>

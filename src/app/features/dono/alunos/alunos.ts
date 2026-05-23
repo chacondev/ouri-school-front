@@ -8,20 +8,23 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { AlunoService } from '../../../core/services/aluno.service';
 import { Aluno } from '../../../core/models/aluno.model';
 import { CryptoService } from '../../../core/services/crypto.service';
+import { AlertService } from '../../../shared/alert-dialog/alert.service';
 
 @Component({
   selector: 'app-alunos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatPaginatorModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatPaginatorModule, MatProgressBarModule],
   templateUrl: './alunos.html',
 })
 export class AlunosComponent implements OnInit, OnDestroy {
   private svc = inject(AlunoService);
   private fb = inject(FormBuilder);
   private crypto = inject(CryptoService);
+  private alert = inject(AlertService);
 
   alunos = signal<Aluno[]>([]);
   colunas = ['nome', 'email', 'telefone', 'ativo', 'acoes'];
@@ -31,6 +34,7 @@ export class AlunosComponent implements OnInit, OnDestroy {
   pagina = signal(0);
   tamanhoPagina = signal(10);
   total = signal(0);
+  carregando = signal(false);
   termoBusca = '';
   private busca$ = new Subject<string>();
   private destroy$ = new Subject<void>();
@@ -53,9 +57,10 @@ export class AlunosComponent implements OnInit, OnDestroy {
   ngOnDestroy() { this.destroy$.next(); this.destroy$.complete(); }
 
   carregar() {
-    this.svc.listarAlunos(this.pagina(), this.tamanhoPagina(), this.termoBusca || undefined).subscribe(r => {
-      this.alunos.set(r.alunos);
-      this.total.set(r.totalElements);
+    this.carregando.set(true);
+    this.svc.listarAlunos(this.pagina(), this.tamanhoPagina(), this.termoBusca || undefined).subscribe({
+      next: r => { this.alunos.set(r.alunos); this.total.set(r.totalElements); this.carregando.set(false); },
+      error: () => this.carregando.set(false),
     });
   }
 
@@ -117,7 +122,7 @@ export class AlunosComponent implements OnInit, OnDestroy {
   }
 
   excluir(a: Aluno) {
-    if (!confirm(`Excluir aluno ${a.nome}?`)) return;
-    this.svc.deletarAluno(a.id).subscribe(() => this.carregar());
+    this.alert.confirmar(`Excluir aluno ${a.nome}? Esta ação não pode ser desfeita.`, 'Excluir Aluno')
+      .subscribe(ok => { if (ok) this.svc.deletarAluno(a.id).subscribe(() => this.carregar()); });
   }
 }

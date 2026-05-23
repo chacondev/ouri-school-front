@@ -59,6 +59,7 @@
     </div>
   }
 
+  @if (carregando()) { <mat-progress-bar mode="indeterminate" /> }
   <table mat-table [dataSource]="alunos()">
     <ng-container matColumnDef="nome">
       <th mat-header-cell *matHeaderCellDef>Nome</th>

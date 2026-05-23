@@ -8,18 +8,21 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { QuadraService } from '../../../core/services/quadra.service';
 import { Quadra } from '../../../core/models/quadra.model';
+import { AlertService } from '../../../shared/alert-dialog/alert.service';
 
 @Component({
   selector: 'app-quadras',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatPaginatorModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatPaginatorModule, MatProgressBarModule],
   templateUrl: './quadras.html',
 })
 export class QuadrasComponent implements OnInit {
   private svc = inject(QuadraService);
   private fb = inject(FormBuilder);
+  private alert = inject(AlertService);
 
   quadras = signal<Quadra[]>([]);
   colunas = ['nome', 'tipo', 'descricao', 'ativa', 'acoes'];
@@ -28,6 +31,7 @@ export class QuadrasComponent implements OnInit {
   erro = signal('');
   pagina = signal(0);
   tamanhoPagina = signal(10);
+  carregando = signal(false);
   termoBusca = signal('');
   filtradas = computed(() => {
     const t = this.termoBusca().toLowerCase();
@@ -50,7 +54,11 @@ export class QuadrasComponent implements OnInit {
   ngOnInit() { this.carregar(); }
 
   carregar() {
-    this.svc.listar().subscribe(r => this.quadras.set(r.quadras));
+    this.carregando.set(true);
+    this.svc.listar().subscribe({
+      next: r => { this.quadras.set(r.quadras); this.carregando.set(false); },
+      error: () => this.carregando.set(false),
+    });
   }
 
   onBusca(termo: string) { this.termoBusca.set(termo); this.pagina.set(0); }
@@ -88,7 +96,7 @@ export class QuadrasComponent implements OnInit {
   }
 
   excluir(q: Quadra) {
-    if (!confirm(`Excluir quadra ${q.nome}?`)) return;
-    this.svc.deletar(q.id).subscribe(() => this.carregar());
+    this.alert.confirmar(`Excluir quadra ${q.nome}? Esta ação não pode ser desfeita.`, 'Excluir Quadra')
+      .subscribe(ok => { if (ok) this.svc.deletar(q.id).subscribe(() => this.carregar()); });
   }
 }

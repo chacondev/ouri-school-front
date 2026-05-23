@@ -7,18 +7,21 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ModalidadeService } from '../../../core/services/modalidade.service';
 import { Modalidade } from '../../../core/models/modalidade.model';
+import { AlertService } from '../../../shared/alert-dialog/alert.service';
 
 @Component({
   selector: 'app-modalidades',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatPaginatorModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatPaginatorModule, MatProgressBarModule],
   templateUrl: './modalidades.html',
 })
 export class ModalidadesComponent implements OnInit {
   private svc = inject(ModalidadeService);
   private fb = inject(FormBuilder);
+  private alert = inject(AlertService);
 
   modalidades = signal<Modalidade[]>([]);
   colunas = ['nome', 'descricao', 'ativo', 'acoes'];
@@ -26,6 +29,7 @@ export class ModalidadesComponent implements OnInit {
   salvando = signal(false);
   pagina = signal(0);
   tamanhoPagina = signal(10);
+  carregando = signal(false);
   termoBusca = signal('');
   filtradas = computed(() => {
     const t = this.termoBusca().toLowerCase();
@@ -45,7 +49,11 @@ export class ModalidadesComponent implements OnInit {
   ngOnInit() { this.carregar(); }
 
   carregar() {
-    this.svc.listar().subscribe(r => this.modalidades.set(r.modalidades));
+    this.carregando.set(true);
+    this.svc.listar().subscribe({
+      next: r => { this.modalidades.set(r.modalidades); this.carregando.set(false); },
+      error: () => this.carregando.set(false),
+    });
   }
 
   onBusca(termo: string) { this.termoBusca.set(termo); this.pagina.set(0); }
@@ -78,7 +86,7 @@ export class ModalidadesComponent implements OnInit {
   }
 
   excluir(m: Modalidade) {
-    if (!confirm(`Excluir modalidade ${m.nome}?`)) return;
-    this.svc.deletar(m.id).subscribe(() => this.carregar());
+    this.alert.confirmar(`Excluir modalidade ${m.nome}? Esta ação não pode ser desfeita.`, 'Excluir Modalidade')
+      .subscribe(ok => { if (ok) this.svc.deletar(m.id).subscribe(() => this.carregar()); });
   }
 }

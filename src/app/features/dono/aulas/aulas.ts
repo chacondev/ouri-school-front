@@ -10,6 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { DonoService } from '../../../core/services/dono.service';
 import { AulaService } from '../../../core/services/aula.service';
 import { AlertService } from '../../../shared/alert-dialog/alert.service';
@@ -23,7 +24,7 @@ import { InscritosDialogComponent } from './inscritos-dialog';
     CommonModule, ReactiveFormsModule,
     MatTableModule, MatButtonModule, MatIconModule,
     MatFormFieldModule, MatInputModule, MatSelectModule, MatDialogModule,
-    MatPaginatorModule, MatButtonToggleModule,
+    MatPaginatorModule, MatButtonToggleModule, MatProgressBarModule,
   ],
   templateUrl: './aulas.html',
 })
@@ -39,6 +40,7 @@ export class AulasDonoComponent implements OnInit {
   colunas = ['modalidade', 'professor', 'quadra', 'inicio', 'fim', 'limiteAlunos', 'status', 'acoes'];
   modoForm = signal(false);
   salvando = signal(false);
+  carregando = signal(false);
   pagina = signal(0);
   tamanhoPagina = signal(10);
   total = signal(0);
@@ -59,9 +61,10 @@ export class AulasDonoComponent implements OnInit {
   }
 
   carregar() {
-    this.donoSvc.listarAulas(this.pagina(), this.tamanhoPagina(), this.filtroStatus() || undefined).subscribe(r => {
-      this.aulas.set(r.aulas);
-      this.total.set(r.totalElements);
+    this.carregando.set(true);
+    this.donoSvc.listarAulas(this.pagina(), this.tamanhoPagina(), this.filtroStatus() || undefined).subscribe({
+      next: r => { this.aulas.set(r.aulas); this.total.set(r.totalElements); this.carregando.set(false); },
+      error: () => this.carregando.set(false),
     });
   }
 
