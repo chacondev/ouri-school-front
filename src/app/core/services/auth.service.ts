@@ -6,6 +6,7 @@ import { from, switchMap } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { LoginResponse, UserRole } from '../models/auth.model';
 import { CryptoService } from './crypto.service';
+import { AlertService } from '../../shared/alert-dialog/alert.service';
 
 const API = 'http://localhost:8080';
 const CLIENT_HEADER = 'Basic ' + btoa('ouri-school-app:HashAqui!10');
@@ -16,6 +17,7 @@ export class AuthService {
   private router = inject(Router);
   private platformId = inject(PLATFORM_ID);
   private crypto = inject(CryptoService);
+  private alert = inject(AlertService);
 
   private get isBrowser() {
     return isPlatformBrowser(this.platformId);
@@ -58,9 +60,9 @@ export class AuthService {
   }
 
   confirmarLogout() {
-    if (confirm('Deseja realmente sair?')) {
-      this.logout();
-    }
+    this.alert.confirmar('Deseja realmente sair da sua conta?', 'Sair').subscribe(confirmado => {
+      if (confirmado) this.logout();
+    });
   }
 
   getToken(): string | null {
