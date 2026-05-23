@@ -1,6 +1,6 @@
 import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators, FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,7 +13,7 @@ import { Modalidade } from '../../../core/models/modalidade.model';
 @Component({
   selector: 'app-modalidades',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatPaginatorModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatPaginatorModule],
   templateUrl: './modalidades.html',
 })
 export class ModalidadesComponent implements OnInit {
@@ -26,9 +26,14 @@ export class ModalidadesComponent implements OnInit {
   salvando = signal(false);
   pagina = signal(0);
   tamanhoPagina = signal(10);
+  termoBusca = signal('');
+  filtradas = computed(() => {
+    const t = this.termoBusca().toLowerCase();
+    return t ? this.modalidades().filter(m => m.nome.toLowerCase().includes(t)) : this.modalidades();
+  });
   paginadas = computed(() => {
     const start = this.pagina() * this.tamanhoPagina();
-    return this.modalidades().slice(start, start + this.tamanhoPagina());
+    return this.filtradas().slice(start, start + this.tamanhoPagina());
   });
 
   form = this.fb.group({
@@ -42,6 +47,8 @@ export class ModalidadesComponent implements OnInit {
   carregar() {
     this.svc.listar().subscribe(r => this.modalidades.set(r.modalidades));
   }
+
+  onBusca(termo: string) { this.termoBusca.set(termo); this.pagina.set(0); }
 
   onPage(e: PageEvent) { this.pagina.set(e.pageIndex); this.tamanhoPagina.set(e.pageSize); }
 

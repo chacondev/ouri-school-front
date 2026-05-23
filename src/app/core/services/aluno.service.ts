@@ -11,8 +11,10 @@ const API = 'http://localhost:8080';
 export class AlunoService {
   private http = inject(HttpClient);
 
-  listarAlunos(page = 0, size = 10) {
-    return this.http.get<{ alunos: Aluno[] } & PagedResponse>(`${API}/aluno/lista-alunos`, { params: { page, size } });
+  listarAlunos(page = 0, size = 10, busca?: string) {
+    const params: Record<string, any> = { page, size };
+    if (busca) params['busca'] = busca;
+    return this.http.get<{ alunos: Aluno[] } & PagedResponse>(`${API}/aluno/lista-alunos`, { params });
   }
 
   dadosAluno(id: number) {

@@ -22,6 +22,7 @@ export const routes: Routes = [
       { path: 'modalidades', loadComponent: () => import('./features/dono/modalidades/modalidades').then(m => m.ModalidadesComponent) },
       { path: 'quadras', loadComponent: () => import('./features/dono/quadras/quadras').then(m => m.QuadrasComponent) },
       { path: 'aulas', loadComponent: () => import('./features/dono/aulas/aulas').then(m => m.AulasDonoComponent) },
+      { path: 'perfil', loadComponent: () => import('./features/dono/perfil/perfil').then(m => m.PerfilDonoComponent) },
     ],
   },
 

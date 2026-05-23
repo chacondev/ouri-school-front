@@ -1,6 +1,7 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators, FormsModule } from '@angular/forms';
+import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,7 +19,7 @@ import { CryptoService } from '../../../core/services/crypto.service';
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule, FormsModule,
     MatTableModule,
     MatButtonModule,
     MatIconModule,
@@ -30,7 +31,7 @@ import { CryptoService } from '../../../core/services/crypto.service';
   ],
   templateUrl: './professores.html',
 })
-export class ProfessoresComponent implements OnInit {
+export class ProfessoresComponent implements OnInit, OnDestroy {
   private svc = inject(DonoService);
   private fb = inject(FormBuilder);
   private crypto = inject(CryptoService);
@@ -43,6 +44,9 @@ export class ProfessoresComponent implements OnInit {
   pagina = signal(0);
   tamanhoPagina = signal(10);
   total = signal(0);
+  termoBusca = '';
+  private busca$ = new Subject<string>();
+  private destroy$ = new Subject<void>();
 
   form = this.fb.group({
     id: [null as number | null],
@@ -53,14 +57,22 @@ export class ProfessoresComponent implements OnInit {
     senha: [''],
   });
 
-  ngOnInit() { this.carregar(); }
+  ngOnInit() {
+    this.busca$.pipe(debounceTime(300), distinctUntilChanged(), takeUntil(this.destroy$))
+      .subscribe(() => { this.pagina.set(0); this.carregar(); });
+    this.carregar();
+  }
+
+  ngOnDestroy() { this.destroy$.next(); this.destroy$.complete(); }
 
   carregar() {
-    this.svc.listarProfessores(this.pagina(), this.tamanhoPagina()).subscribe(r => {
+    this.svc.listarProfessores(this.pagina(), this.tamanhoPagina(), this.termoBusca || undefined).subscribe(r => {
       this.professores.set(r.professores);
       this.total.set(r.totalElements);
     });
   }
+
+  onBusca(termo: string) { this.busca$.next(termo); }
 
   onPage(e: PageEvent) {
     this.pagina.set(e.pageIndex);

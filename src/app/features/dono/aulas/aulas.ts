@@ -9,8 +9,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { DonoService } from '../../../core/services/dono.service';
 import { AulaService } from '../../../core/services/aula.service';
+import { AlertService } from '../../../shared/alert-dialog/alert.service';
 import { AulaAgendaItem, DadosCriacaoAula } from '../../../core/models/aula.model';
 import { InscritosDialogComponent } from './inscritos-dialog';
 
@@ -21,13 +23,14 @@ import { InscritosDialogComponent } from './inscritos-dialog';
     CommonModule, ReactiveFormsModule,
     MatTableModule, MatButtonModule, MatIconModule,
     MatFormFieldModule, MatInputModule, MatSelectModule, MatDialogModule,
-    MatPaginatorModule,
+    MatPaginatorModule, MatButtonToggleModule,
   ],
   templateUrl: './aulas.html',
 })
 export class AulasDonoComponent implements OnInit {
   private donoSvc = inject(DonoService);
   private aulaSvc = inject(AulaService);
+  private alert = inject(AlertService);
   private fb = inject(FormBuilder);
   private dialog = inject(MatDialog);
 
@@ -39,6 +42,7 @@ export class AulasDonoComponent implements OnInit {
   pagina = signal(0);
   tamanhoPagina = signal(10);
   total = signal(0);
+  filtroStatus = signal<string>('');
 
   form = this.fb.group({
     idModalidade: [null as number | null, Validators.required],
@@ -55,7 +59,7 @@ export class AulasDonoComponent implements OnInit {
   }
 
   carregar() {
-    this.donoSvc.listarAulas(this.pagina(), this.tamanhoPagina()).subscribe(r => {
+    this.donoSvc.listarAulas(this.pagina(), this.tamanhoPagina(), this.filtroStatus() || undefined).subscribe(r => {
       this.aulas.set(r.aulas);
       this.total.set(r.totalElements);
     });
@@ -64,6 +68,12 @@ export class AulasDonoComponent implements OnInit {
   onPage(e: PageEvent) {
     this.pagina.set(e.pageIndex);
     this.tamanhoPagina.set(e.pageSize);
+    this.carregar();
+  }
+
+  onFiltroStatus(status: string) {
+    this.filtroStatus.set(status);
+    this.pagina.set(0);
     this.carregar();
   }
 
@@ -89,6 +99,28 @@ export class AulasDonoComponent implements OnInit {
 
   verInscritos(aula: AulaAgendaItem) {
     this.dialog.open(InscritosDialogComponent, { data: aula, width: '500px' });
+  }
+
+  realizarAula(aula: AulaAgendaItem) {
+    this.alert.confirmar(`Confirmar que a aula de ${aula.modalidade} foi realizada?`, 'Marcar como Realizada')
+      .subscribe(ok => {
+        if (!ok) return;
+        this.aulaSvc.realizarAulaDono(aula.idAula).subscribe({
+          next: () => this.carregar(),
+          error: (e: any) => this.alert.erro(e?.error?.message ?? 'Não foi possível realizar a aula.'),
+        });
+      });
+  }
+
+  cancelarAula(aula: AulaAgendaItem) {
+    this.alert.confirmar(`Cancelar a aula de ${aula.modalidade}? Todas as inscrições ativas serão canceladas.`, 'Cancelar Aula')
+      .subscribe(ok => {
+        if (!ok) return;
+        this.aulaSvc.cancelarAulaDono(aula.idAula).subscribe({
+          next: () => this.carregar(),
+          error: (e: any) => this.alert.erro(e?.error?.message ?? 'Não foi possível cancelar a aula.'),
+        });
+      });
   }
 
   statusClass(status: string) {

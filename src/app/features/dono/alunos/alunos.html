@@ -8,6 +8,14 @@
     }
   </div>
 
+  @if (modoForm() === 'fechado') {
+    <mat-form-field appearance="outline" style="width:100%;margin-bottom:8px">
+      <mat-label>Buscar por nome ou e-mail</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput [(ngModel)]="termoBusca" (ngModelChange)="onBusca($event)" placeholder="Digite para filtrar..." />
+    </mat-form-field>
+  }
+
   @if (modoForm() !== 'fechado') {
     <div style="background:#f8f9fa;border-radius:8px;padding:20px;margin-bottom:20px">
       <h3 style="margin-bottom:16px;color:var(--navy)">

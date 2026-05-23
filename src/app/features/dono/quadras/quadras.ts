@@ -1,6 +1,6 @@
 import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators, FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,7 +14,7 @@ import { Quadra } from '../../../core/models/quadra.model';
 @Component({
   selector: 'app-quadras',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatPaginatorModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatPaginatorModule],
   templateUrl: './quadras.html',
 })
 export class QuadrasComponent implements OnInit {
@@ -28,9 +28,14 @@ export class QuadrasComponent implements OnInit {
   erro = signal('');
   pagina = signal(0);
   tamanhoPagina = signal(10);
+  termoBusca = signal('');
+  filtradas = computed(() => {
+    const t = this.termoBusca().toLowerCase();
+    return t ? this.quadras().filter(q => q.nome.toLowerCase().includes(t) || q.tipo.toLowerCase().includes(t)) : this.quadras();
+  });
   paginadas = computed(() => {
     const start = this.pagina() * this.tamanhoPagina();
-    return this.quadras().slice(start, start + this.tamanhoPagina());
+    return this.filtradas().slice(start, start + this.tamanhoPagina());
   });
 
   tipos = ['Society', 'Poliesportiva', 'Natação', 'Tênis', 'Basquete', 'Outro'];
@@ -47,6 +52,8 @@ export class QuadrasComponent implements OnInit {
   carregar() {
     this.svc.listar().subscribe(r => this.quadras.set(r.quadras));
   }
+
+  onBusca(termo: string) { this.termoBusca.set(termo); this.pagina.set(0); }
 
   onPage(e: PageEvent) { this.pagina.set(e.pageIndex); this.tamanhoPagina.set(e.pageSize); }
 

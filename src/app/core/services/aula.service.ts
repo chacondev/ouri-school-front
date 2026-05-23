@@ -41,4 +41,12 @@ export class AulaService {
   cancelarAula(idAula: number) {
     return this.http.patch<any>(`${API}/aulas/${idAula}/cancelar`, null);
   }
+
+  realizarAulaDono(idAula: number) {
+    return this.http.patch<any>(`${API}/dono/aulas/${idAula}/realizar`, null);
+  }
+
+  cancelarAulaDono(idAula: number) {
+    return this.http.patch<any>(`${API}/dono/aulas/${idAula}/cancelar`, null);
+  }
 }

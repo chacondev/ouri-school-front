@@ -10,8 +10,10 @@ const API = 'http://localhost:8080';
 export class DonoService {
   private http = inject(HttpClient);
 
-  listarProfessores(page = 0, size = 10) {
-    return this.http.get<{ professores: Professor[] } & PagedResponse>(`${API}/dono/lista-professores`, { params: { page, size } });
+  listarProfessores(page = 0, size = 10, busca?: string) {
+    const params: Record<string, any> = { page, size };
+    if (busca) params['busca'] = busca;
+    return this.http.get<{ professores: Professor[] } & PagedResponse>(`${API}/dono/lista-professores`, { params });
   }
 
   dadosProfessor(id: number) {
@@ -38,7 +40,9 @@ export class DonoService {
     return this.http.get<DashboardDonoResponse>(`${API}/dono/dashboard`);
   }
 
-  listarAulas(page = 0, size = 10) {
-    return this.http.get<AgendaAulasResponse>(`${API}/dono/aulas`, { params: { page, size } });
+  listarAulas(page = 0, size = 10, status?: string) {
+    const params: Record<string, any> = { page, size };
+    if (status) params['status'] = status;
+    return this.http.get<AgendaAulasResponse>(`${API}/dono/aulas`, { params });
   }
 }

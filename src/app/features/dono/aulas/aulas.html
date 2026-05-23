@@ -8,6 +8,13 @@
     }
   </div>
 
+  <mat-button-toggle-group [value]="filtroStatus()" (change)="onFiltroStatus($event.value)" style="margin-bottom:16px">
+    <mat-button-toggle value="">Todas</mat-button-toggle>
+    <mat-button-toggle value="AGENDADA">Agendadas</mat-button-toggle>
+    <mat-button-toggle value="REALIZADA">Realizadas</mat-button-toggle>
+    <mat-button-toggle value="CANCELADA">Canceladas</mat-button-toggle>
+  </mat-button-toggle-group>
+
   @if (modoForm()) {
     <div style="background:#f8f9fa;border-radius:8px;padding:20px;margin-bottom:20px">
       <h3 style="margin-bottom:16px;color:var(--navy)">Nova Aula</h3>
@@ -92,11 +99,19 @@
       </td>
     </ng-container>
     <ng-container matColumnDef="acoes">
-      <th mat-header-cell *matHeaderCellDef>Inscritos</th>
+      <th mat-header-cell *matHeaderCellDef>Ações</th>
       <td mat-cell *matCellDef="let a">
         <button mat-icon-button (click)="verInscritos(a)" title="Ver inscritos">
           <mat-icon style="color:var(--blue)">group</mat-icon>
         </button>
+        @if (a.status === 'AGENDADA') {
+          <button mat-icon-button (click)="realizarAula(a)" title="Marcar como realizada">
+            <mat-icon style="color:var(--green)">check_circle</mat-icon>
+          </button>
+          <button mat-icon-button (click)="cancelarAula(a)" title="Cancelar aula">
+            <mat-icon style="color:#e53935">cancel</mat-icon>
+          </button>
+        }
       </td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="colunas"></tr>
