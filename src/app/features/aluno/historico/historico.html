@@ -3,6 +3,26 @@
     <h2>Histórico de Aulas</h2>
   </div>
 
+  <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:12px">
+    <mat-form-field appearance="outline" style="flex:1;min-width:160px">
+      <mat-label>Modalidade</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput [(ngModel)]="filtroModalidade" placeholder="Ex: Futebol" />
+    </mat-form-field>
+    <mat-form-field appearance="outline" style="min-width:160px">
+      <mat-label>De</mat-label>
+      <input matInput type="date" [(ngModel)]="filtroDataInicio" />
+    </mat-form-field>
+    <mat-form-field appearance="outline" style="min-width:160px">
+      <mat-label>Até</mat-label>
+      <input matInput type="date" [(ngModel)]="filtroDataFim" />
+    </mat-form-field>
+    <div style="display:flex;gap:8px;margin-bottom:20px">
+      <button mat-flat-button class="btn-blue" (click)="filtrar()">Filtrar</button>
+      <button mat-stroked-button (click)="limpar()">Limpar</button>
+    </div>
+  </div>
+
   @if (carregando()) { <mat-progress-bar mode="indeterminate" /> }
   <table mat-table [dataSource]="aulas()">
     <ng-container matColumnDef="modalidade">
@@ -37,7 +57,7 @@
     <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
   </table>
 
-  @if (aulas().length === 0) {
+  @if (aulas().length === 0 && !carregando()) {
     <p class="text-center mt-16" style="color:#999">Nenhuma aula no histórico.</p>
   }
 

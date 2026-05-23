@@ -18,7 +18,11 @@ export class ProfessorService {
     return this.http.get<AgendaAulasResponse>(`${API}/professor/agenda`, { params: { page, size } });
   }
 
-  historico(page = 0, size = 10) {
-    return this.http.get<HistoricoProfessorResponseDTO>(`${API}/professor/historico`, { params: { page, size } });
+  historico(page = 0, size = 10, modalidade?: string, dataInicio?: string, dataFim?: string) {
+    const params: Record<string, any> = { page, size };
+    if (modalidade) params['modalidade'] = modalidade;
+    if (dataInicio) params['dataInicio'] = dataInicio;
+    if (dataFim) params['dataFim'] = dataFim;
+    return this.http.get<HistoricoProfessorResponseDTO>(`${API}/professor/historico`, { params });
   }
 }
