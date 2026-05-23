@@ -49,6 +49,10 @@ export interface CriarAulaRequest {
 export interface AgendaAulasResponse {
   aulas: AulaAgendaItem[];
   total: number;
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
 }
 
 export interface ListaAulasDisponiveisResponse {

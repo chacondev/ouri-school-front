@@ -98,4 +98,13 @@
   @if (professores().length === 0) {
     <p class="text-center mt-16" style="color:#999">Nenhum professor cadastrado.</p>
   }
+
+  <mat-paginator
+    [length]="total()"
+    [pageSize]="tamanhoPagina()"
+    [pageIndex]="pagina()"
+    [pageSizeOptions]="[5, 10, 25]"
+    (page)="onPage($event)"
+    showFirstLastButtons>
+  </mat-paginator>
 </div>

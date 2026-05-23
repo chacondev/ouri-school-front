@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Aluno, CadastraAlunoRequest, AtualizarAlunoRequest } from '../models/aluno.model';
 import { DashboardAlunoResponse } from '../models/dashboard.model';
 import { HistoricoAlunoResponseDTO } from '../models/historico.model';
+import { PagedResponse } from '../models/professor.model';
 
 const API = 'http://localhost:8080';
 
@@ -10,8 +11,8 @@ const API = 'http://localhost:8080';
 export class AlunoService {
   private http = inject(HttpClient);
 
-  listarAlunos() {
-    return this.http.get<{ alunos: Aluno[] }>(`${API}/aluno/lista-alunos`);
+  listarAlunos(page = 0, size = 10) {
+    return this.http.get<{ alunos: Aluno[] } & PagedResponse>(`${API}/aluno/lista-alunos`, { params: { page, size } });
   }
 
   dadosAluno(id: number) {

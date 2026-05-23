@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { DonoService } from '../../../core/services/dono.service';
 import { AulaService } from '../../../core/services/aula.service';
 import { AulaAgendaItem, DadosCriacaoAula } from '../../../core/models/aula.model';
@@ -20,6 +21,7 @@ import { InscritosDialogComponent } from './inscritos-dialog';
     CommonModule, ReactiveFormsModule,
     MatTableModule, MatButtonModule, MatIconModule,
     MatFormFieldModule, MatInputModule, MatSelectModule, MatDialogModule,
+    MatPaginatorModule,
   ],
   templateUrl: './aulas.html',
 })
@@ -34,6 +36,9 @@ export class AulasDonoComponent implements OnInit {
   colunas = ['modalidade', 'professor', 'quadra', 'inicio', 'fim', 'limiteAlunos', 'status', 'acoes'];
   modoForm = signal(false);
   salvando = signal(false);
+  pagina = signal(0);
+  tamanhoPagina = signal(10);
+  total = signal(0);
 
   form = this.fb.group({
     idModalidade: [null as number | null, Validators.required],
@@ -50,7 +55,16 @@ export class AulasDonoComponent implements OnInit {
   }
 
   carregar() {
-    this.donoSvc.listarAulas().subscribe(r => this.aulas.set(r.aulas));
+    this.donoSvc.listarAulas(this.pagina(), this.tamanhoPagina()).subscribe(r => {
+      this.aulas.set(r.aulas);
+      this.total.set(r.totalElements);
+    });
+  }
+
+  onPage(e: PageEvent) {
+    this.pagina.set(e.pageIndex);
+    this.tamanhoPagina.set(e.pageSize);
+    this.carregar();
   }
 
   abrirNovo() { this.form.reset(); this.modoForm.set(true); }

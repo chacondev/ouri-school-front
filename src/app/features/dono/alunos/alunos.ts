@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { AlunoService } from '../../../core/services/aluno.service';
 import { Aluno } from '../../../core/models/aluno.model';
 import { CryptoService } from '../../../core/services/crypto.service';
@@ -13,7 +14,7 @@ import { CryptoService } from '../../../core/services/crypto.service';
 @Component({
   selector: 'app-alunos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule],
+  imports: [CommonModule, ReactiveFormsModule, MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatPaginatorModule],
   templateUrl: './alunos.html',
 })
 export class AlunosComponent implements OnInit {
@@ -26,6 +27,9 @@ export class AlunosComponent implements OnInit {
   modoForm = signal<'fechado' | 'novo' | 'editar'>('fechado');
   salvando = signal(false);
   erro = signal('');
+  pagina = signal(0);
+  tamanhoPagina = signal(10);
+  total = signal(0);
 
   form = this.fb.group({
     id: [null as number | null],
@@ -39,7 +43,16 @@ export class AlunosComponent implements OnInit {
   ngOnInit() { this.carregar(); }
 
   carregar() {
-    this.svc.listarAlunos().subscribe(r => this.alunos.set(r.alunos));
+    this.svc.listarAlunos(this.pagina(), this.tamanhoPagina()).subscribe(r => {
+      this.alunos.set(r.alunos);
+      this.total.set(r.totalElements);
+    });
+  }
+
+  onPage(e: PageEvent) {
+    this.pagina.set(e.pageIndex);
+    this.tamanhoPagina.set(e.pageSize);
+    this.carregar();
   }
 
   abrirNovo() {

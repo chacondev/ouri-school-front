@@ -8,6 +8,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { DonoService } from '../../../core/services/dono.service';
 import { Professor } from '../../../core/models/professor.model';
 import { CryptoService } from '../../../core/services/crypto.service';
@@ -25,6 +26,7 @@ import { CryptoService } from '../../../core/services/crypto.service';
     MatFormFieldModule,
     MatInputModule,
     MatSlideToggleModule,
+    MatPaginatorModule,
   ],
   templateUrl: './professores.html',
 })
@@ -38,6 +40,9 @@ export class ProfessoresComponent implements OnInit {
   modoForm = signal<'fechado' | 'novo' | 'editar'>('fechado');
   salvando = signal(false);
   erro = signal('');
+  pagina = signal(0);
+  tamanhoPagina = signal(10);
+  total = signal(0);
 
   form = this.fb.group({
     id: [null as number | null],
@@ -51,7 +56,16 @@ export class ProfessoresComponent implements OnInit {
   ngOnInit() { this.carregar(); }
 
   carregar() {
-    this.svc.listarProfessores().subscribe(r => this.professores.set(r.professores));
+    this.svc.listarProfessores(this.pagina(), this.tamanhoPagina()).subscribe(r => {
+      this.professores.set(r.professores);
+      this.total.set(r.totalElements);
+    });
+  }
+
+  onPage(e: PageEvent) {
+    this.pagina.set(e.pageIndex);
+    this.tamanhoPagina.set(e.pageSize);
+    this.carregar();
   }
 
   abrirNovo() {

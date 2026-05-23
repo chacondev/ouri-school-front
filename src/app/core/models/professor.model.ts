@@ -1,3 +1,10 @@
+export interface PagedResponse {
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+}
+
 export interface Professor {
   id: number;
   nome: string;

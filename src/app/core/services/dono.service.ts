@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Professor, CadastraProfessorRequest, AtualizarProfessorRequest } from '../models/professor.model';
+import { Professor, CadastraProfessorRequest, AtualizarProfessorRequest, PagedResponse } from '../models/professor.model';
 import { DashboardDonoResponse } from '../models/dashboard.model';
 import { AgendaAulasResponse } from '../models/aula.model';
 
@@ -10,8 +10,8 @@ const API = 'http://localhost:8080';
 export class DonoService {
   private http = inject(HttpClient);
 
-  listarProfessores() {
-    return this.http.get<{ professores: Professor[] }>(`${API}/dono/lista-professores`);
+  listarProfessores(page = 0, size = 10) {
+    return this.http.get<{ professores: Professor[] } & PagedResponse>(`${API}/dono/lista-professores`, { params: { page, size } });
   }
 
   dadosProfessor(id: number) {
@@ -38,7 +38,7 @@ export class DonoService {
     return this.http.get<DashboardDonoResponse>(`${API}/dono/dashboard`);
   }
 
-  listarAulas() {
-    return this.http.get<AgendaAulasResponse>(`${API}/dono/aulas`);
+  listarAulas(page = 0, size = 10) {
+    return this.http.get<AgendaAulasResponse>(`${API}/dono/aulas`, { params: { page, size } });
   }
 }
