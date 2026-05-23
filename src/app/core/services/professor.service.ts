@@ -14,8 +14,8 @@ export class ProfessorService {
     return this.http.get<DashboardProfessorResponse>(`${API}/professor/dashboard`);
   }
 
-  agenda() {
-    return this.http.get<AgendaAulasResponse>(`${API}/professor/agenda`);
+  agenda(page = 0, size = 10) {
+    return this.http.get<AgendaAulasResponse>(`${API}/professor/agenda`, { params: { page, size } });
   }
 
   historico() {

@@ -4,6 +4,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { ProfessorService } from '../../../core/services/professor.service';
 import { AulaService } from '../../../core/services/aula.service';
 import { AulaAgendaItem } from '../../../core/models/aula.model';
@@ -12,7 +13,7 @@ import { InscritosDialogComponent } from '../../dono/aulas/inscritos-dialog';
 @Component({
   selector: 'app-agenda-professor',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, MatDialogModule],
+  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, MatDialogModule, MatPaginatorModule],
   templateUrl: './agenda.html',
 })
 export class AgendaProfessorComponent implements OnInit {
@@ -22,11 +23,23 @@ export class AgendaProfessorComponent implements OnInit {
 
   aulas = signal<AulaAgendaItem[]>([]);
   colunas = ['modalidade', 'quadra', 'inicio', 'fim', 'limiteAlunos', 'status', 'acoes'];
+  pagina = signal(0);
+  tamanhoPagina = signal(10);
+  total = signal(0);
 
   ngOnInit() { this.carregar(); }
 
   carregar() {
-    this.svc.agenda().subscribe(r => this.aulas.set(r.aulas));
+    this.svc.agenda(this.pagina(), this.tamanhoPagina()).subscribe(r => {
+      this.aulas.set(r.aulas);
+      this.total.set(r.totalElements);
+    });
+  }
+
+  onPage(e: PageEvent) {
+    this.pagina.set(e.pageIndex);
+    this.tamanhoPagina.set(e.pageSize);
+    this.carregar();
   }
 
   realizarAula(a: AulaAgendaItem) {
