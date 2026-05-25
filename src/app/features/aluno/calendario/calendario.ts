@@ -1,0 +1,76 @@
+import { Component, inject, signal, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FullCalendarModule } from '@fullcalendar/angular';
+import { CalendarOptions, EventClickArg, DatesSetArg, EventInput } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import ptBrLocale from '@fullcalendar/core/locales/pt-br';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { AlunoService } from '../../../core/services/aluno.service';
+import { HistoricoAulaAlunoItem } from '../../../core/models/historico.model';
+import { AulaDetalheAlunoDialogComponent } from './aula-detalhe-dialog';
+
+const STATUS_COLORS: Record<string, string> = {
+  AGENDADA: '#1976d2',
+  REALIZADA: '#388e3c',
+  CANCELADA: '#d32f2f',
+};
+
+@Component({
+  selector: 'app-calendario-aluno',
+  standalone: true,
+  imports: [CommonModule, FullCalendarModule, MatDialogModule, MatButtonModule],
+  templateUrl: './calendario.html',
+})
+export class CalendarioAlunoComponent {
+  private svc = inject(AlunoService);
+  private dialog = inject(MatDialog);
+  private cdr = inject(ChangeDetectorRef);
+
+  calendarOptions: CalendarOptions = {
+    plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+    locale: ptBrLocale,
+    initialView: 'timeGridWeek',
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay',
+    },
+    slotMinTime: '06:00:00',
+    slotMaxTime: '23:00:00',
+    allDaySlot: false,
+    height: 'auto',
+    eventClick: (info: EventClickArg) => this.onEventClick(info),
+    datesSet: (info: DatesSetArg) => this.carregarPeriodo(info),
+    events: [],
+    eventTimeFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
+    slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
+    buttonText: { today: 'Hoje', month: 'Mês', week: 'Semana', day: 'Dia' },
+  };
+
+  carregarPeriodo(info: DatesSetArg) {
+    const dataInicio = info.start.toISOString().split('T')[0];
+    const dataFim = info.end.toISOString().split('T')[0];
+
+    this.svc.calendario(dataInicio, dataFim).subscribe(r => {
+      const events: EventInput[] = r.historico.map(a => ({
+        id: String(a.idAula),
+        title: `${a.modalidade} — ${a.professor}`,
+        start: a.inicio,
+        end: a.fim,
+        backgroundColor: STATUS_COLORS[a.statusAula] ?? '#607d8b',
+        borderColor: STATUS_COLORS[a.statusAula] ?? '#607d8b',
+        extendedProps: { aula: a },
+      }));
+      this.calendarOptions = { ...this.calendarOptions, events };
+      this.cdr.detectChanges();
+    });
+  }
+
+  onEventClick(info: EventClickArg) {
+    const aula = info.event.extendedProps['aula'] as HistoricoAulaAlunoItem;
+    this.dialog.open(AulaDetalheAlunoDialogComponent, { data: aula, width: '420px' });
+  }
+}

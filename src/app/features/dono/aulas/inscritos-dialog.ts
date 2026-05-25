@@ -13,10 +13,14 @@ import { Inscrito } from '../../../core/models/inscricao.model';
   standalone: true,
   imports: [CommonModule, MatDialogModule, MatButtonModule, MatTableModule, MatIconModule],
   template: `
-    <h2 mat-dialog-title>Inscritos — {{ aula.modalidade }}</h2>
+    <h2 mat-dialog-title style="text-align:center">Inscritos — {{ aula.modalidade }}</h2>
     <mat-dialog-content>
-      <p style="margin-bottom:12px;color:#666;font-size:0.85rem">
+      <p style="margin-bottom:4px;color:#666;font-size:1rem;text-align:center">
         {{ aula.inicio | date:'dd/MM/yyyy HH:mm' }} · {{ aula.quadra }}
+      </p>
+      <p style="margin-bottom:12px;color:#555;font-size:1rem;display:flex;align-items:center;justify-content:center;gap:4px">
+        <mat-icon style="font-size:18px;width:18px;height:18px;line-height:18px">person</mat-icon>
+        Professor: {{ aula.professor }}
       </p>
       @if (inscritos().length > 0) {
         <table mat-table [dataSource]="inscritos()" style="width:100%">

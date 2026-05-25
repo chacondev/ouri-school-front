@@ -41,6 +41,10 @@ export class AlunoService {
     return this.http.get<DashboardAlunoResponse>(`${API}/aluno/dashboard`);
   }
 
+  calendario(dataInicio: string, dataFim: string) {
+    return this.http.get<HistoricoAlunoResponseDTO>(`${API}/aluno/calendario`, { params: { dataInicio, dataFim } });
+  }
+
   historico(page = 0, size = 10, modalidade?: string, dataInicio?: string, dataFim?: string) {
     const params: Record<string, any> = { page, size };
     if (modalidade) params['modalidade'] = modalidade;

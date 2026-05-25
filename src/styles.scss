@@ -349,3 +349,51 @@ mat-form-field { width: 100%; }
 .mat-button-toggle .mat-button-toggle-button {
   width: 100%;
 }
+
+/* ---- FullCalendar — padrão visual do app (igual mat-chip-option) ---- */
+.fc .fc-button {
+  background-color: #fff !important;
+  border: 1px solid rgba(0, 0, 0, 0.18) !important;
+  color: rgba(0, 0, 0, 0.75) !important;
+  border-radius: 16px !important;
+  font-size: 13px !important;
+  padding: 4px 14px !important;
+  font-weight: 500 !important;
+  text-transform: none !important;
+  box-shadow: none !important;
+  transition: background 0.15s, color 0.15s !important;
+
+  &:hover:not(:disabled) {
+    background-color: rgba(0, 0, 0, 0.04) !important;
+  }
+
+  &:focus {
+    box-shadow: none !important;
+    outline: none !important;
+  }
+}
+
+.fc .fc-button-active,
+.fc .fc-button-primary:not(:disabled).fc-button-active {
+  background-color: var(--blue) !important;
+  border-color: var(--blue) !important;
+  color: #fff !important;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  color: var(--navy) !important;
+}
+
+.fc .fc-col-header-cell-cushion,
+.fc .fc-daygrid-day-number {
+  color: var(--navy) !important;
+  text-decoration: none !important;
+}
+
+.fc-event {
+  cursor: pointer !important;
+  border-radius: 4px !important;
+  font-size: 12px !important;
+}
