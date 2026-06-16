@@ -4,6 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../../../core/services/auth.service';
+import { ThemeService } from '../../../core/services/theme.service';
 
 @Component({
   selector: 'app-shell-aluno',
@@ -13,6 +14,7 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class ShellAlunoComponent {
   auth = inject(AuthService);
+  theme = inject(ThemeService);
   nome = this.auth.getNome();
   hoje = this.formatarHoje();
   sidebarAberta = signal(false);

@@ -4,6 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../../../core/services/auth.service';
+import { ThemeService } from '../../../core/services/theme.service';
 import { AulaService } from '../../../core/services/aula.service';
 
 @Component({
@@ -14,6 +15,7 @@ import { AulaService } from '../../../core/services/aula.service';
 })
 export class ShellProfessorComponent implements OnInit {
   auth = inject(AuthService);
+  theme = inject(ThemeService);
   private aulaSvc = inject(AulaService);
   nome = this.auth.getNome();
   hoje = this.formatarHoje();

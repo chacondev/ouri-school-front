@@ -4,15 +4,15 @@
       <span class="stat-label">Inscrições Ativas</span>
       <span class="stat-value">{{ d.totalInscricoesAtivas }}</span>
     </div>
-    <div class="stat-card" style="background:var(--blue)">
+    <div class="stat-card" style="border-top-color:var(--blue)">
       <span class="stat-label">Próximas Aulas</span>
       <span class="stat-value">{{ d.proximasAulas.length }}</span>
     </div>
-    <div class="stat-card" style="background:var(--yellow);color:#333">
+    <div class="stat-card" style="border-top-color:var(--yellow)">
       <span class="stat-label">Aulas este mês</span>
       <span class="stat-value">{{ d.aulasEsteMes }}</span>
     </div>
-    <div class="stat-card" style="background:#f97316;color:#fff">
+    <div class="stat-card" style="border-top-color:#f97316">
       <span class="stat-label">Próxima aula em</span>
       <span class="stat-value" style="font-size:1.1rem">
         {{ d.proximasAulas[0] ? (d.proximasAulas[0].inicio | date:'dd/MM HH:mm') : '—' }}
