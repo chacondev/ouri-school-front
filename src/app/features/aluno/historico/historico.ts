@@ -1,7 +1,6 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -14,14 +13,13 @@ import { HistoricoAulaAlunoItem } from '../../../core/models/historico.model';
 @Component({
   selector: 'app-historico-aluno',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatTableModule, MatIconModule, MatButtonModule, MatPaginatorModule, MatProgressBarModule, MatFormFieldModule, MatInputModule],
+  imports: [CommonModule, FormsModule, MatIconModule, MatButtonModule, MatPaginatorModule, MatProgressBarModule, MatFormFieldModule, MatInputModule],
   templateUrl: './historico.html',
 })
 export class HistoricoAlunoComponent implements OnInit {
   private svc = inject(AlunoService);
 
   aulas = signal<HistoricoAulaAlunoItem[]>([]);
-  colunas = ['modalidade', 'professor', 'inicio', 'fim', 'statusInscricao', 'statusAula'];
   pagina = signal(0);
   tamanhoPagina = signal(10);
   total = signal(0);
@@ -65,8 +63,13 @@ export class HistoricoAlunoComponent implements OnInit {
     this.carregar();
   }
 
-  statusClass(status: string) {
+  statusClass(status: string): string {
     const map: Record<string, string> = { AGENDADA: 'badge-blue', REALIZADA: 'badge-green', CANCELADA: 'badge-red', CONFIRMADA: 'badge-green', CANCELADO: 'badge-red', INSCRITO: 'badge-blue' };
-    return 'badge ' + (map[status] ?? 'badge-gray');
+    return map[status] ?? 'badge-gray';
+  }
+
+  statusLabel(status: string): string {
+    const map: Record<string, string> = { AGENDADA: 'Agendada', REALIZADA: 'Realizada', CANCELADA: 'Cancelada', CONFIRMADA: 'Confirmada', CANCELADO: 'Cancelado', INSCRITO: 'Inscrito' };
+    return map[status] ?? status;
   }
 }

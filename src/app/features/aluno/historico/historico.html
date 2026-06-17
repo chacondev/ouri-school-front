@@ -3,71 +3,86 @@
     <h2>Histórico de Aulas</h2>
   </div>
 
-  <div class="historico-filtros" style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:12px">
-    <mat-form-field appearance="outline" style="flex:1;min-width:160px">
-      <mat-label>Modalidade</mat-label>
-      <mat-icon matPrefix>search</mat-icon>
-      <input matInput [(ngModel)]="filtroModalidade" placeholder="Ex: Futebol" />
-    </mat-form-field>
-    <mat-form-field appearance="outline" style="min-width:160px">
-      <mat-label>De</mat-label>
-      <input matInput type="date" [(ngModel)]="filtroDataInicio" />
-    </mat-form-field>
-    <mat-form-field appearance="outline" style="min-width:160px">
-      <mat-label>Até</mat-label>
-      <input matInput type="date" [(ngModel)]="filtroDataFim" />
-    </mat-form-field>
-    <div style="display:flex;gap:8px;margin-bottom:20px">
-      <button mat-flat-button class="btn-blue" (click)="filtrar()">Filtrar</button>
-      <button mat-stroked-button (click)="limpar()">Limpar</button>
+  <div class="hist-filtros">
+    <div class="hist-filtros-campos">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="hist-filtro-campo">
+        <mat-label>Modalidade</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput [(ngModel)]="filtroModalidade" placeholder="Ex: Tênis" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="hist-filtro-campo">
+        <mat-label>De</mat-label>
+        <input matInput type="date" [(ngModel)]="filtroDataInicio" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="hist-filtro-campo">
+        <mat-label>Até</mat-label>
+        <input matInput type="date" [(ngModel)]="filtroDataFim" />
+      </mat-form-field>
+    </div>
+    <div class="hist-filtro-acoes">
+      <button mat-flat-button class="btn-blue" (click)="filtrar()">
+        <mat-icon>filter_list</mat-icon> Filtrar
+      </button>
+      <button mat-stroked-button (click)="limpar()">
+        <mat-icon>clear</mat-icon> Limpar
+      </button>
     </div>
   </div>
 
-  @if (carregando()) { <mat-progress-bar mode="indeterminate" /> }
-  <div class="table-wrap">
-    <table mat-table [dataSource]="aulas()">
-      <ng-container matColumnDef="modalidade">
-        <th mat-header-cell *matHeaderCellDef>Modalidade</th>
-        <td mat-cell *matCellDef="let a">{{ a.modalidade }}</td>
-      </ng-container>
-      <ng-container matColumnDef="professor">
-        <th mat-header-cell *matHeaderCellDef>Professor</th>
-        <td mat-cell *matCellDef="let a">{{ a.professor }}</td>
-      </ng-container>
-      <ng-container matColumnDef="inicio">
-        <th mat-header-cell *matHeaderCellDef>Data</th>
-        <td mat-cell *matCellDef="let a">{{ a.inicio | date:'dd/MM/yyyy HH:mm' }}</td>
-      </ng-container>
-      <ng-container matColumnDef="fim">
-        <th mat-header-cell *matHeaderCellDef>Fim</th>
-        <td mat-cell *matCellDef="let a">{{ a.fim | date:'HH:mm' }}</td>
-      </ng-container>
-      <ng-container matColumnDef="statusInscricao">
-        <th mat-header-cell *matHeaderCellDef>Inscrição</th>
-        <td mat-cell *matCellDef="let a">
-          <span [class]="statusClass(a.statusInscricao)">{{ a.statusInscricao }}</span>
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="statusAula">
-        <th mat-header-cell *matHeaderCellDef>Status Aula</th>
-        <td mat-cell *matCellDef="let a">
-          <span [class]="statusClass(a.statusAula)">{{ a.statusAula }}</span>
-        </td>
-      </ng-container>
-      <tr mat-header-row *matHeaderRowDef="colunas"></tr>
-      <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
-    </table>
-  </div>
-
-  @if (aulas().length === 0 && !carregando()) {
-    <p class="text-center mt-16" style="color:var(--text-secondary)">Nenhuma aula no histórico.</p>
+  @if (carregando()) {
+    <mat-progress-bar mode="indeterminate" />
   }
+
+  @if (!carregando() && aulas().length === 0) {
+    <div class="hist-empty">
+      <mat-icon>history</mat-icon>
+      <p>Nenhuma aula no histórico.</p>
+    </div>
+  }
+
+  <div class="hist-lista">
+    @for (a of aulas(); track a.idAula) {
+      <div class="hist-card hist-card--{{ a.statusAula.toLowerCase() }}">
+
+        <div class="hist-card-data">
+          <div class="hist-dia">{{ a.inicio | date:'dd' }}</div>
+          <div class="hist-mes">{{ a.inicio | date:'MMM' }}</div>
+          <div class="hist-ano">{{ a.inicio | date:'yyyy' }}</div>
+        </div>
+
+        <div class="hist-card-corpo">
+          <div class="hist-card-topo">
+            <span class="hist-modalidade">{{ a.modalidade }}</span>
+            <span [class]="'badge ' + statusClass(a.statusAula)">
+              {{ statusLabel(a.statusAula) }}
+            </span>
+          </div>
+          <div class="hist-info-row">
+            <mat-icon>person</mat-icon>
+            <span>{{ a.professor }}</span>
+          </div>
+          <div class="hist-info-row">
+            <mat-icon>schedule</mat-icon>
+            <span>{{ a.inicio | date:'HH:mm' }} – {{ a.fim | date:'HH:mm' }}</span>
+          </div>
+        </div>
+
+        <div class="hist-card-inscricao">
+          <span [class]="'badge ' + statusClass(a.statusInscricao)">
+            {{ statusLabel(a.statusInscricao) }}
+          </span>
+          <span class="hist-inscricao-label">inscrição</span>
+        </div>
+
+      </div>
+    }
+  </div>
 
   <mat-paginator
     [length]="total()"
     [pageSize]="tamanhoPagina()"
     [pageIndex]="pagina()"
-    [pageSizeOptions]="[5, 10, 25]"
+    [pageSizeOptions]="[10, 25, 50]"
     (page)="onPage($event)"
     showFirstLastButtons>
   </mat-paginator>

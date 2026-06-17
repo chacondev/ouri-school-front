@@ -3,7 +3,7 @@
     <h2>Calendário da Escola</h2>
   </div>
 
-  @if (professoresLegenda().length > 0) {
+  @if (professoresLegenda().length) {
     <div class="cal-legenda">
       @for (p of professoresLegenda(); track p.nome) {
         <span class="cal-legenda-item">

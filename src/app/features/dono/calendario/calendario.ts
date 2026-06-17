@@ -60,7 +60,6 @@ export class CalendarioDonoComponent {
   carregarPeriodo(info: DatesSetArg) {
     const dataInicio = info.start.toISOString().split('T')[0];
     const dataFim = info.end.toISOString().split('T')[0];
-
     this.svc.calendarioAulas(dataInicio, dataFim).subscribe(r => {
       const colorMap = new Map<string, string>();
       let idx = 0;
@@ -82,11 +81,10 @@ export class CalendarioDonoComponent {
         };
       });
 
-      this.professoresLegenda.set(
-        Array.from(colorMap.entries()).map(([nome, cor]) => ({ nome, cor }))
-      );
-
       setTimeout(() => {
+        this.professoresLegenda.set(
+          Array.from(colorMap.entries()).map(([nome, cor]) => ({ nome, cor }))
+        );
         this.calendarOptions = { ...this.calendarOptions, events };
         this.cdr.detectChanges();
       }, 0);

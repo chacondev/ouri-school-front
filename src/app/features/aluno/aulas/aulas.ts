@@ -30,7 +30,7 @@ export class AulasAlunoComponent implements OnInit {
   inscrevendo = signal<number | null>(null);
   cancelando = signal<number | null>(null);
   pagina = signal(0);
-  tamanhoPagina = signal(10);
+  tamanhoPagina = signal(12);
   total = signal(0);
 
   ngOnInit() {

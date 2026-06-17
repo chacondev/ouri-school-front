@@ -1,34 +1,26 @@
 <div class="page-card perfil-card">
-  <div class="card-header">
-    <h2>Meu Perfil</h2>
-  </div>
-
   @if (usuario(); as u) {
     @if (!modoEdicao()) {
 
-      <!-- Hero: avatar + nome + role -->
-      <div class="perfil-hero">
+      <div class="perfil-banner">
         <div class="perfil-avatar">{{ iniciais(u.nome) }}</div>
-        <div class="perfil-identidade">
-          <h3 class="perfil-nome">{{ u.nome }}</h3>
-          <span class="badge badge-blue">Gestor</span>
-        </div>
+        <h2 class="perfil-nome">{{ u.nome }}</h2>
+        <span class="badge badge-blue">Gestor</span>
         <button mat-icon-button class="perfil-edit-btn" (click)="modoEdicao.set(true)" title="Editar perfil">
           <mat-icon>edit</mat-icon>
         </button>
       </div>
 
-      <!-- Informações -->
-      <div class="perfil-info">
+      <div class="perfil-body">
         <div class="perfil-info-row">
-          <mat-icon class="perfil-info-icon">email</mat-icon>
+          <div class="perfil-info-icon-wrap"><mat-icon>email</mat-icon></div>
           <div>
             <div class="perfil-info-label">Email</div>
             <div class="perfil-info-value">{{ u.email }}</div>
           </div>
         </div>
         <div class="perfil-info-row">
-          <mat-icon class="perfil-info-icon">phone</mat-icon>
+          <div class="perfil-info-icon-wrap"><mat-icon>phone</mat-icon></div>
           <div>
             <div class="perfil-info-label">Telefone</div>
             <div class="perfil-info-value">{{ u.telefone ?? '—' }}</div>
@@ -38,46 +30,55 @@
 
     } @else {
 
-      <!-- Modo edição -->
-      <div class="perfil-hero" style="margin-bottom: 20px">
+      <div class="perfil-banner perfil-banner--edit">
         <div class="perfil-avatar">{{ iniciais(u.nome) }}</div>
-        <div class="perfil-identidade">
-          <h3 class="perfil-nome">Editar Perfil</h3>
-          <span class="badge badge-blue">Gestor</span>
-        </div>
+        <h2 class="perfil-nome">{{ u.nome }}</h2>
+        <span class="badge badge-blue">Gestor</span>
       </div>
 
-      <form [formGroup]="form" (ngSubmit)="salvar()">
-        <div class="form-grid">
-          <mat-form-field appearance="outline">
-            <mat-label>Nome</mat-label>
-            <input matInput formControlName="nome" />
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Email</mat-label>
-            <input matInput formControlName="email" type="email" />
-          </mat-form-field>
-          <mat-form-field appearance="outline" style="grid-column:1/-1">
-            <mat-label>Telefone</mat-label>
-            <input matInput formControlName="telefone" />
-          </mat-form-field>
-        </div>
+      <div class="perfil-body">
+        <form [formGroup]="form" (ngSubmit)="salvar()">
 
-        <div class="perfil-senha-section">
-          <div class="perfil-section-label">Alterar Senha</div>
-          <mat-form-field appearance="outline" style="width:100%">
-            <mat-label>Nova Senha (deixe em branco para não alterar)</mat-label>
-            <input matInput formControlName="senha" type="password" />
-          </mat-form-field>
-        </div>
+          <div class="perfil-form-section">
+            <div class="perfil-section-label">
+              <mat-icon>person</mat-icon> Dados pessoais
+            </div>
+            <div class="form-grid">
+              <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                <mat-label>Nome</mat-label>
+                <input matInput formControlName="nome" />
+              </mat-form-field>
+              <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email" type="email" />
+              </mat-form-field>
+              <mat-form-field appearance="outline" subscriptSizing="dynamic" style="grid-column:1/-1">
+                <mat-label>Telefone</mat-label>
+                <input matInput formControlName="telefone" />
+              </mat-form-field>
+            </div>
+          </div>
 
-        <div class="flex flex-end gap-8 mt-16">
-          <button type="button" mat-stroked-button (click)="modoEdicao.set(false)">Cancelar</button>
-          <button type="submit" mat-flat-button class="btn-green" [disabled]="form.invalid || salvando()">
-            {{ salvando() ? 'Salvando...' : 'Salvar alterações' }}
-          </button>
-        </div>
-      </form>
+          <div class="perfil-form-section">
+            <div class="perfil-section-label">
+              <mat-icon>lock</mat-icon> Alterar senha
+            </div>
+            <mat-form-field appearance="outline" subscriptSizing="dynamic" style="width:100%">
+              <mat-label>Nova senha (deixe em branco para não alterar)</mat-label>
+              <input matInput formControlName="senha" type="password" />
+            </mat-form-field>
+          </div>
+
+          <div class="perfil-form-acoes">
+            <button type="button" mat-stroked-button (click)="modoEdicao.set(false)">Cancelar</button>
+            <button type="submit" mat-flat-button class="btn-green" [disabled]="form.invalid || salvando()">
+              <mat-icon>{{ salvando() ? 'hourglass_empty' : 'check' }}</mat-icon>
+              {{ salvando() ? 'Salvando...' : 'Salvar alterações' }}
+            </button>
+          </div>
+
+        </form>
+      </div>
 
     }
   }
