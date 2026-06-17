@@ -9,11 +9,12 @@ import { InscricaoService } from '../../../core/services/inscricao.service';
 import { DashboardAlunoResponse } from '../../../core/models/dashboard.model';
 import { MinhaInscricao } from '../../../core/models/inscricao.model';
 import { AlertService } from '../../../shared/alert-dialog/alert.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-dashboard-aluno',
   standalone: true,
-  imports: [CommonModule, RouterLink, MatTableModule, MatButtonModule, MatIconModule],
+  imports: [CommonModule, RouterLink, MatTableModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
   templateUrl: './dashboard.html',
 })
 export class DashboardAlunoComponent implements OnInit {

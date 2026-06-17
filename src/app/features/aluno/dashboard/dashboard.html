@@ -1,4 +1,5 @@
 @if (dashboard(); as d) {
+
   <div class="dashboard-grid-centered">
     <div class="stat-card">
       <span class="stat-label">Inscrições Ativas</span>
@@ -60,6 +61,10 @@
       </div>
     </div>
 
+  </div>
+} @else {
+  <div class="cal-loading-overlay">
+    <mat-spinner diameter="48" />
   </div>
 }
 

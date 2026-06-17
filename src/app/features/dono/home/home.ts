@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DonoService } from '../../../core/services/dono.service';
 import { DashboardDonoResponse } from '../../../core/models/dashboard.model';
 
 @Component({
   selector: 'app-home-dono',
   standalone: true,
-  imports: [CommonModule, RouterLink, MatIconModule, MatTableModule],
+  imports: [CommonModule, RouterLink, MatIconModule, MatTableModule, MatProgressSpinnerModule],
   templateUrl: './home.html',
 })
 export class HomeDonoComponent implements OnInit {
