@@ -1,7 +1,7 @@
 services:
   - type: web
     name: ouri-school-front
-    runtime: node
+    env: node
     buildCommand: "npm ci && npm run build"
     startCommand: "node dist/ouri-school-front/server/server.mjs"
     plan: free
