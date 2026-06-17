@@ -1,5 +1,6 @@
 <div class="page-card perfil-card">
   @if (usuario(); as u) {
+
     @if (!modoEdicao()) {
 
       <div class="perfil-banner">
@@ -81,5 +82,9 @@
       </div>
 
     }
+  } @else {
+    <div class="cal-loading-overlay">
+      <mat-spinner diameter="48" />
+    </div>
   }
 </div>

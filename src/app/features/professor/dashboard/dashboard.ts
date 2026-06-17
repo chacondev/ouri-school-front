@@ -4,13 +4,14 @@ import { RouterLink } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ProfessorService } from '../../../core/services/professor.service';
 import { DashboardProfessorResponse } from '../../../core/models/dashboard.model';
 
 @Component({
   selector: 'app-dashboard-professor',
   standalone: true,
-  imports: [CommonModule, RouterLink, MatTableModule, MatIconModule, MatButtonModule],
+  imports: [CommonModule, RouterLink, MatTableModule, MatIconModule, MatButtonModule, MatProgressSpinnerModule],
   templateUrl: './dashboard.html',
 })
 export class DashboardProfessorComponent implements OnInit {

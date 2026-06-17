@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { UsuarioService } from '../../../core/services/usuario.service';
 import { UsuarioDTO } from '../../../core/models/usuario.model';
 import { AlertService } from '../../../shared/alert-dialog/alert.service';
@@ -12,7 +13,7 @@ import { AlertService } from '../../../shared/alert-dialog/alert.service';
 @Component({
   selector: 'app-perfil-dono',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule],
+  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
   templateUrl: './perfil.html',
 })
 export class PerfilDonoComponent implements OnInit {
