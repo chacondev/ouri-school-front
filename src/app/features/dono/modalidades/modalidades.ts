@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatMenuModule } from '@angular/material/menu';
 import { ModalidadeService } from '../../../core/services/modalidade.service';
 import { Modalidade } from '../../../core/models/modalidade.model';
 import { AlertService } from '../../../shared/alert-dialog/alert.service';
@@ -15,7 +16,7 @@ import { AlertService } from '../../../shared/alert-dialog/alert.service';
 @Component({
   selector: 'app-modalidades',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatPaginatorModule, MatProgressBarModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, MatTableModule, MatButtonModule, MatIconModule, MatMenuModule, MatFormFieldModule, MatInputModule, MatPaginatorModule, MatProgressBarModule],
   templateUrl: './modalidades.html',
 })
 export class ModalidadesComponent implements OnInit {

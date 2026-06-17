@@ -12,7 +12,7 @@
       <span class="stat-label">Modalidades</span>
       <span class="stat-value">{{ d.totalModalidades }}</span>
     </div>
-    <div class="stat-card" style="border-top-color:#f97316">
+    <div class="stat-card" style="border-top-color:var(--orange)">
       <span class="stat-label">Quadras</span>
       <span class="stat-value">{{ d.totalQuadras }}</span>
     </div>
@@ -24,27 +24,29 @@
       <h2>Próximas Aulas</h2>
       <a routerLink="/dono/aulas" style="font-size:0.85rem;color:var(--blue)">Ver todas</a>
     </div>
-    <table mat-table [dataSource]="d.proximasAulas">
-      <ng-container matColumnDef="modalidade">
-        <th mat-header-cell *matHeaderCellDef>Modalidade</th>
-        <td mat-cell *matCellDef="let a">{{ a.modalidade }}</td>
-      </ng-container>
-      <ng-container matColumnDef="professor">
-        <th mat-header-cell *matHeaderCellDef>Professor</th>
-        <td mat-cell *matCellDef="let a">{{ a.professor }}</td>
-      </ng-container>
-      <ng-container matColumnDef="inicio">
-        <th mat-header-cell *matHeaderCellDef>Início</th>
-        <td mat-cell *matCellDef="let a">{{ a.inicio | date:'dd/MM/yy HH:mm' }}</td>
-      </ng-container>
-      <ng-container matColumnDef="fim">
-        <th mat-header-cell *matHeaderCellDef>Fim</th>
-        <td mat-cell *matCellDef="let a">{{ a.fim | date:'HH:mm' }}</td>
-      </ng-container>
-      <tr mat-header-row *matHeaderRowDef="colunas"></tr>
-      <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
-    </table>
+    <div class="table-wrap">
+      <table mat-table [dataSource]="d.proximasAulas">
+        <ng-container matColumnDef="modalidade">
+          <th mat-header-cell *matHeaderCellDef>Modalidade</th>
+          <td mat-cell *matCellDef="let a">{{ a.modalidade }}</td>
+        </ng-container>
+        <ng-container matColumnDef="professor">
+          <th mat-header-cell *matHeaderCellDef>Professor</th>
+          <td mat-cell *matCellDef="let a">{{ a.professor }}</td>
+        </ng-container>
+        <ng-container matColumnDef="inicio">
+          <th mat-header-cell *matHeaderCellDef>Início</th>
+          <td mat-cell *matCellDef="let a">{{ a.inicio | date:'dd/MM/yy HH:mm' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="fim">
+          <th mat-header-cell *matHeaderCellDef>Fim</th>
+          <td mat-cell *matCellDef="let a">{{ a.fim | date:'HH:mm' }}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+        <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
+      </table>
+    </div>
   </div>
 } @else {
-  <div class="text-center mt-24" style="color:#999">Carregando dashboard...</div>
+  <div class="text-center mt-24" style="color:var(--text-secondary)">Carregando dashboard...</div>
 }

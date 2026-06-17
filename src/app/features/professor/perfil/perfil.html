@@ -1,31 +1,52 @@
-<div class="page-card" style="max-width:600px">
+<div class="page-card perfil-card">
   <div class="card-header">
     <h2>Meu Perfil</h2>
-    @if (!modoEdicao()) {
-      <button mat-flat-button class="btn-blue" (click)="modoEdicao.set(true)">
-        <mat-icon>edit</mat-icon> Editar
-      </button>
-    }
   </div>
 
   @if (usuario(); as u) {
     @if (!modoEdicao()) {
-      <div style="display:flex;flex-direction:column;gap:16px">
-        <div style="display:flex;align-items:center;gap:16px;margin-bottom:8px">
-          <div style="width:64px;height:64px;border-radius:50%;background:var(--navy-dark);display:flex;align-items:center;justify-content:center">
-            <mat-icon style="color:#fff;font-size:36px;width:36px;height:36px">person</mat-icon>
-          </div>
+
+      <!-- Hero: avatar + nome + role -->
+      <div class="perfil-hero">
+        <div class="perfil-avatar">{{ iniciais(u.nome) }}</div>
+        <div class="perfil-identidade">
+          <h3 class="perfil-nome">{{ u.nome }}</h3>
+          <span class="badge badge-blue">Professor</span>
+        </div>
+        <button mat-icon-button class="perfil-edit-btn" (click)="modoEdicao.set(true)" title="Editar perfil">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
+
+      <!-- Informações -->
+      <div class="perfil-info">
+        <div class="perfil-info-row">
+          <mat-icon class="perfil-info-icon">email</mat-icon>
           <div>
-            <div style="font-size:1.1rem;font-weight:600">{{ u.nome }}</div>
-            <div style="font-size:0.85rem;color:#666">Professor</div>
+            <div class="perfil-info-label">Email</div>
+            <div class="perfil-info-value">{{ u.email }}</div>
           </div>
         </div>
-        <div class="form-grid">
-          <div><label style="font-size:0.75rem;color:#999;text-transform:uppercase;letter-spacing:0.5px">Email</label><p>{{ u.email }}</p></div>
-          <div><label style="font-size:0.75rem;color:#999;text-transform:uppercase;letter-spacing:0.5px">Telefone</label><p>{{ u.telefone ?? '—' }}</p></div>
+        <div class="perfil-info-row">
+          <mat-icon class="perfil-info-icon">phone</mat-icon>
+          <div>
+            <div class="perfil-info-label">Telefone</div>
+            <div class="perfil-info-value">{{ u.telefone ?? '—' }}</div>
+          </div>
         </div>
       </div>
+
     } @else {
+
+      <!-- Modo edição -->
+      <div class="perfil-hero" style="margin-bottom: 20px">
+        <div class="perfil-avatar">{{ iniciais(u.nome) }}</div>
+        <div class="perfil-identidade">
+          <h3 class="perfil-nome">Editar Perfil</h3>
+          <span class="badge badge-blue">Professor</span>
+        </div>
+      </div>
+
       <form [formGroup]="form" (ngSubmit)="salvar()">
         <div class="form-grid">
           <mat-form-field appearance="outline">
@@ -36,22 +57,28 @@
             <mat-label>Email</mat-label>
             <input matInput formControlName="email" type="email" />
           </mat-form-field>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" style="grid-column:1/-1">
             <mat-label>Telefone</mat-label>
             <input matInput formControlName="telefone" />
           </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Nova Senha (opcional)</mat-label>
+        </div>
+
+        <div class="perfil-senha-section">
+          <div class="perfil-section-label">Alterar Senha</div>
+          <mat-form-field appearance="outline" style="width:100%">
+            <mat-label>Nova Senha (deixe em branco para não alterar)</mat-label>
             <input matInput formControlName="senha" type="password" />
           </mat-form-field>
         </div>
+
         <div class="flex flex-end gap-8 mt-16">
           <button type="button" mat-stroked-button (click)="modoEdicao.set(false)">Cancelar</button>
           <button type="submit" mat-flat-button class="btn-green" [disabled]="form.invalid || salvando()">
-            {{ salvando() ? 'Salvando...' : 'Salvar' }}
+            {{ salvando() ? 'Salvando...' : 'Salvar alterações' }}
           </button>
         </div>
       </form>
+
     }
   }
 </div>

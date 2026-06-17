@@ -1,9 +1,10 @@
-import { Component, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, signal, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { CalendarOptions, EventClickArg, DatesSetArg, EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
+import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
 import ptBrLocale from '@fullcalendar/core/locales/pt-br';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
@@ -27,13 +28,19 @@ export class CalendarioDonoComponent {
   private dialog = inject(MatDialog);
   private cdr = inject(ChangeDetectorRef);
 
-  professoresLegenda: { nome: string; cor: string }[] = [];
+  professoresLegenda = signal<{ nome: string; cor: string }[]>([]);
+
+  private readonly mobile = typeof window !== 'undefined' && window.innerWidth <= 768;
 
   calendarOptions: CalendarOptions = {
-    plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+    plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
     locale: ptBrLocale,
-    initialView: 'timeGridWeek',
-    headerToolbar: {
+    initialView: this.mobile ? 'listWeek' : 'timeGridWeek',
+    headerToolbar: this.mobile ? {
+      left: 'prev,next',
+      center: 'title',
+      right: 'today',
+    } : {
       left: 'prev,next today',
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay',
@@ -47,7 +54,7 @@ export class CalendarioDonoComponent {
     events: [],
     eventTimeFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
     slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
-    buttonText: { today: 'Hoje', month: 'Mês', week: 'Semana', day: 'Dia' },
+    buttonText: { today: 'Hoje', month: 'Mês', week: 'Semana', day: 'Dia', list: 'Lista' },
   };
 
   carregarPeriodo(info: DatesSetArg) {
@@ -75,9 +82,14 @@ export class CalendarioDonoComponent {
         };
       });
 
-      this.professoresLegenda = Array.from(colorMap.entries()).map(([nome, cor]) => ({ nome, cor }));
-      this.calendarOptions = { ...this.calendarOptions, events };
-      this.cdr.detectChanges();
+      this.professoresLegenda.set(
+        Array.from(colorMap.entries()).map(([nome, cor]) => ({ nome, cor }))
+      );
+
+      setTimeout(() => {
+        this.calendarOptions = { ...this.calendarOptions, events };
+        this.cdr.detectChanges();
+      }, 0);
     });
   }
 

@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatMenuModule } from '@angular/material/menu';
 import { QuadraService } from '../../../core/services/quadra.service';
 import { Quadra } from '../../../core/models/quadra.model';
 import { AlertService } from '../../../shared/alert-dialog/alert.service';
@@ -16,7 +17,7 @@ import { AlertService } from '../../../shared/alert-dialog/alert.service';
 @Component({
   selector: 'app-quadras',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatPaginatorModule, MatProgressBarModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, MatTableModule, MatButtonModule, MatIconModule, MatMenuModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatPaginatorModule, MatProgressBarModule],
   templateUrl: './quadras.html',
 })
 export class QuadrasComponent implements OnInit {

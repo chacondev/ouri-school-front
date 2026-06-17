@@ -8,16 +8,30 @@
     }
   </div>
 
-  <mat-button-toggle-group [value]="filtroStatus()" (change)="onFiltroStatus($event.value)" style="margin-bottom:16px">
-    <mat-button-toggle value="">Todas</mat-button-toggle>
-    <mat-button-toggle value="AGENDADA">Agendadas</mat-button-toggle>
-    <mat-button-toggle value="REALIZADA">Realizadas</mat-button-toggle>
-    <mat-button-toggle value="CANCELADA">Canceladas</mat-button-toggle>
-  </mat-button-toggle-group>
+  <!-- Filtro desktop: botões toggle -->
+  <div class="filtro-toggle-wrap" style="margin-bottom:16px">
+    <mat-button-toggle-group [value]="filtroStatus()" (change)="onFiltroStatus($event.value)">
+      <mat-button-toggle value="">Todas</mat-button-toggle>
+      <mat-button-toggle value="AGENDADA">Agendadas</mat-button-toggle>
+      <mat-button-toggle value="REALIZADA">Realizadas</mat-button-toggle>
+      <mat-button-toggle value="CANCELADA">Canceladas</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+  <!-- Filtro mobile: select -->
+  <mat-form-field appearance="outline" class="filtro-select-mobile" style="width:100%;margin-bottom:12px">
+    <mat-label>Status</mat-label>
+    <mat-select [value]="filtroStatus()" (selectionChange)="onFiltroStatus($event.value)">
+      <mat-option value="">Todas</mat-option>
+      <mat-option value="AGENDADA">Agendadas</mat-option>
+      <mat-option value="REALIZADA">Realizadas</mat-option>
+      <mat-option value="CANCELADA">Canceladas</mat-option>
+    </mat-select>
+  </mat-form-field>
 
   @if (modoForm()) {
-    <div style="background:#f8f9fa;border-radius:8px;padding:20px;margin-bottom:20px">
-      <h3 style="margin-bottom:16px;color:var(--navy)">Nova Aula</h3>
+    <div class="form-section">
+      <h3 style="margin-bottom:16px;color:var(--navy-dark)">Nova Aula</h3>
       <form [formGroup]="form" (ngSubmit)="salvar()">
         <div class="form-grid">
           <mat-form-field appearance="outline">
@@ -48,13 +62,23 @@
             <mat-label>Limite de Alunos</mat-label>
             <input matInput type="number" formControlName="limiteAlunos" min="1" />
           </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Início</mat-label>
-            <input matInput type="datetime-local" formControlName="inicio" />
+          <mat-form-field appearance="outline" style="grid-column:1/-1">
+            <mat-label>Data da Aula</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="data" [min]="hoje" readonly />
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <mat-label>Fim</mat-label>
-            <input matInput type="datetime-local" formControlName="fim" />
+            <mat-label>Horário de Início</mat-label>
+            <input matInput [matTimepicker]="tpInicio" formControlName="horaInicio" readonly />
+            <mat-timepicker-toggle matIconSuffix [for]="tpInicio"></mat-timepicker-toggle>
+            <mat-timepicker #tpInicio></mat-timepicker>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Horário de Fim</mat-label>
+            <input matInput [matTimepicker]="tpFim" formControlName="horaFim" readonly />
+            <mat-timepicker-toggle matIconSuffix [for]="tpFim"></mat-timepicker-toggle>
+            <mat-timepicker #tpFim></mat-timepicker>
           </mat-form-field>
         </div>
         <div class="flex flex-end gap-8 mt-16">
@@ -68,59 +92,102 @@
   }
 
   @if (carregando()) { <mat-progress-bar mode="indeterminate" /> }
-  <table mat-table [dataSource]="aulas()">
-    <ng-container matColumnDef="modalidade">
-      <th mat-header-cell *matHeaderCellDef>Modalidade</th>
-      <td mat-cell *matCellDef="let a">{{ a.modalidade }}</td>
-    </ng-container>
-    <ng-container matColumnDef="professor">
-      <th mat-header-cell *matHeaderCellDef>Professor</th>
-      <td mat-cell *matCellDef="let a">{{ a.professor }}</td>
-    </ng-container>
-    <ng-container matColumnDef="quadra">
-      <th mat-header-cell *matHeaderCellDef>Quadra</th>
-      <td mat-cell *matCellDef="let a">{{ a.quadra }}</td>
-    </ng-container>
-    <ng-container matColumnDef="inicio">
-      <th mat-header-cell *matHeaderCellDef>Início</th>
-      <td mat-cell *matCellDef="let a">{{ a.inicio | date:'dd/MM/yy HH:mm' }}</td>
-    </ng-container>
-    <ng-container matColumnDef="fim">
-      <th mat-header-cell *matHeaderCellDef>Fim</th>
-      <td mat-cell *matCellDef="let a">{{ a.fim | date:'HH:mm' }}</td>
-    </ng-container>
-    <ng-container matColumnDef="limiteAlunos">
-      <th mat-header-cell *matHeaderCellDef>Vagas</th>
-      <td mat-cell *matCellDef="let a">{{ a.limiteAlunos }}</td>
-    </ng-container>
-    <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef>Status</th>
-      <td mat-cell *matCellDef="let a">
-        <span [class]="statusClass(a.status)">{{ a.status }}</span>
-      </td>
-    </ng-container>
-    <ng-container matColumnDef="acoes">
-      <th mat-header-cell *matHeaderCellDef>Ações</th>
-      <td mat-cell *matCellDef="let a">
-        <button mat-icon-button (click)="verInscritos(a)" title="Ver inscritos">
-          <mat-icon style="color:var(--blue)">group</mat-icon>
+
+  <!-- Tabela — desktop -->
+  <div class="table-wrap hide-on-mobile">
+    <table mat-table [dataSource]="aulas()">
+      <ng-container matColumnDef="modalidade">
+        <th mat-header-cell *matHeaderCellDef>Modalidade</th>
+        <td mat-cell *matCellDef="let a">{{ a.modalidade }}</td>
+      </ng-container>
+      <ng-container matColumnDef="professor">
+        <th mat-header-cell *matHeaderCellDef>Professor</th>
+        <td mat-cell *matCellDef="let a">{{ a.professor }}</td>
+      </ng-container>
+      <ng-container matColumnDef="quadra">
+        <th mat-header-cell *matHeaderCellDef>Quadra</th>
+        <td mat-cell *matCellDef="let a">{{ a.quadra }}</td>
+      </ng-container>
+      <ng-container matColumnDef="inicio">
+        <th mat-header-cell *matHeaderCellDef>Início</th>
+        <td mat-cell *matCellDef="let a">{{ a.inicio | date:'dd/MM/yy HH:mm' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="fim">
+        <th mat-header-cell *matHeaderCellDef>Fim</th>
+        <td mat-cell *matCellDef="let a">{{ a.fim | date:'HH:mm' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="limiteAlunos">
+        <th mat-header-cell *matHeaderCellDef>Vagas</th>
+        <td mat-cell *matCellDef="let a">{{ a.limiteAlunos }}</td>
+      </ng-container>
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let a">
+          <span [class]="statusClass(a.status)">{{ a.status }}</span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let a">
+          <button mat-icon-button (click)="verInscritos(a)" title="Ver inscritos">
+            <mat-icon style="color:var(--blue)">group</mat-icon>
+          </button>
+          @if (a.status === 'AGENDADA') {
+            <button mat-icon-button (click)="realizarAula(a)" title="Marcar como realizada">
+              <mat-icon style="color:var(--green)">check_circle</mat-icon>
+            </button>
+            <button mat-icon-button (click)="cancelarAula(a)" title="Cancelar aula">
+              <mat-icon style="color:var(--red)">cancel</mat-icon>
+            </button>
+          }
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+      <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
+    </table>
+  </div>
+
+  <!-- Cards — mobile -->
+  <div class="pessoa-card-list show-on-mobile">
+    @for (a of aulas(); track a.idAula) {
+      <div class="pessoa-card">
+        <div [class]="avatarClass(a.status)">
+          <mat-icon>event</mat-icon>
+        </div>
+        <div class="pessoa-body">
+          <div class="pessoa-header">
+            <span class="pessoa-nome">{{ a.modalidade }}</span>
+            <span [class]="statusClass(a.status)">{{ a.status }}</span>
+          </div>
+          <div class="pessoa-detalhe">{{ a.professor }}</div>
+          <div class="pessoa-detalhe">
+            {{ a.inicio | date:'dd/MM/yy' }} · {{ a.inicio | date:'HH:mm' }}–{{ a.fim | date:'HH:mm' }}
+          </div>
+        </div>
+        <button mat-icon-button class="pessoa-menu-btn" [matMenuTriggerFor]="menuAula">
+          <mat-icon>more_vert</mat-icon>
         </button>
-        @if (a.status === 'AGENDADA') {
-          <button mat-icon-button (click)="realizarAula(a)" title="Marcar como realizada">
-            <mat-icon style="color:var(--green)">check_circle</mat-icon>
+        <mat-menu #menuAula="matMenu">
+          <button mat-menu-item (click)="verInscritos(a)">
+            <mat-icon>group</mat-icon> Ver inscritos
           </button>
-          <button mat-icon-button (click)="cancelarAula(a)" title="Cancelar aula">
-            <mat-icon style="color:#e53935">cancel</mat-icon>
-          </button>
-        }
-      </td>
-    </ng-container>
-    <tr mat-header-row *matHeaderRowDef="colunas"></tr>
-    <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
-  </table>
+          @if (a.status === 'AGENDADA') {
+            <button mat-menu-item (click)="realizarAula(a)">
+              <mat-icon style="color:var(--green)">check_circle</mat-icon>
+              Marcar como realizada
+            </button>
+            <button mat-menu-item (click)="cancelarAula(a)">
+              <mat-icon style="color:var(--red)">cancel</mat-icon>
+              <span style="color:var(--red)">Cancelar aula</span>
+            </button>
+          }
+        </mat-menu>
+      </div>
+    }
+  </div>
 
   @if (aulas().length === 0) {
-    <p class="text-center mt-16" style="color:#999">Nenhuma aula cadastrada.</p>
+    <p class="text-center mt-16" style="color:var(--text-secondary)">Nenhuma aula cadastrada.</p>
   }
 
   <mat-paginator

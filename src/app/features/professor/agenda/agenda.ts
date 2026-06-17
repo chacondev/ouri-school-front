@@ -47,7 +47,15 @@ export class AgendaProfessorComponent implements OnInit {
     this.carregar();
   }
 
+  aulaTerminou(a: AulaAgendaItem): boolean {
+    return new Date() > new Date(a.fim);
+  }
+
   realizarAula(a: AulaAgendaItem) {
+    if (!this.aulaTerminou(a)) {
+      this.alert.erro('A aula só pode ser marcada como realizada após o horário de término.');
+      return;
+    }
     this.alert.confirmar(`Confirmar que a aula de ${a.modalidade} foi realizada?`, 'Marcar como Realizada')
       .subscribe(ok => {
         if (!ok) return;

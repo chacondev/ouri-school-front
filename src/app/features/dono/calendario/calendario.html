@@ -3,11 +3,11 @@
     <h2>Calendário da Escola</h2>
   </div>
 
-  @if (professoresLegenda.length > 0) {
-    <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
-      @for (p of professoresLegenda; track p.nome) {
-        <span style="display:flex;align-items:center;gap:6px;font-size:13px">
-          <span [style.background]="p.cor" style="width:12px;height:12px;border-radius:50%;display:inline-block"></span>
+  @if (professoresLegenda().length > 0) {
+    <div class="cal-legenda">
+      @for (p of professoresLegenda(); track p.nome) {
+        <span class="cal-legenda-item">
+          <span class="cal-legenda-dot" [style.background]="p.cor"></span>
           {{ p.nome }}
         </span>
       }

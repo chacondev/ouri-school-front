@@ -62,6 +62,37 @@ a {
   &:hover { opacity: 0.75; }
 }
 
+/* ---- Angular Material MDC token overrides (brand colors) ---- */
+:root {
+  --mdc-outlined-text-field-focus-outline-color:    var(--navy-dark);
+  --mdc-outlined-text-field-focus-label-text-color: var(--navy-dark);
+  --mdc-outlined-text-field-caret-color:            var(--navy-dark);
+  --mdc-filled-text-field-focus-active-indicator-color: var(--navy-dark);
+  --mdc-filled-text-field-focus-label-text-color:   var(--navy-dark);
+  --mdc-filled-text-field-caret-color:              var(--navy-dark);
+  --mdc-checkbox-selected-focus-icon-color:         var(--navy-dark);
+  --mdc-checkbox-selected-hover-icon-color:         var(--navy-dark);
+  --mdc-checkbox-selected-icon-color:               var(--navy-dark);
+  --mdc-checkbox-selected-pressed-icon-color:       var(--navy-dark);
+  --mdc-checkbox-selected-focus-state-layer-color:  var(--navy-dark);
+  --mdc-checkbox-selected-hover-state-layer-color:  var(--navy-dark);
+  --mdc-checkbox-selected-pressed-state-layer-color: var(--navy-dark);
+  --mdc-radio-selected-focus-icon-color:            var(--navy-dark);
+  --mdc-radio-selected-hover-icon-color:            var(--navy-dark);
+  --mdc-radio-selected-icon-color:                  var(--navy-dark);
+  --mdc-radio-selected-pressed-icon-color:          var(--navy-dark);
+  --mdc-circular-progress-active-indicator-color:   var(--navy-dark);
+  --mdc-linear-progress-active-indicator-color:     var(--navy-dark);
+}
+
+/* ---- Seção de formulário inline (Nova Aula, Novo Professor, etc.) ---- */
+.form-section {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
 /* ---- Botões customizados ---- */
 .btn-yellow {
   background: var(--yellow) !important;
@@ -407,6 +438,106 @@ a {
 
 mat-form-field { width: 100%; }
 
+/* ---- Perfil ---- */
+.perfil-card { max-width: 560px; }
+
+.perfil-hero {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 4px 0 24px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.perfil-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #05035A 0%, #5555cc 100%);
+  color: #fff;
+  font-size: 1.4rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+.perfil-identidade {
+  flex: 1;
+  min-width: 0;
+}
+
+.perfil-nome {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.perfil-edit-btn {
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  transition: color 0.15s;
+  &:hover { color: var(--navy-dark); }
+}
+
+.perfil-info { display: flex; flex-direction: column; }
+
+.perfil-info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border-color);
+  &:last-child { border-bottom: none; }
+}
+
+.perfil-info-icon {
+  color: var(--text-secondary);
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.perfil-info-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  margin-bottom: 3px;
+}
+
+.perfil-info-value {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.perfil-senha-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+}
+
+.perfil-section-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+}
+
 /* ---- Utilitários ---- */
 .text-center { text-align: center; }
 .mt-16 { margin-top: 16px; }
@@ -419,6 +550,32 @@ mat-form-field { width: 100%; }
 /* Corrige preenchimento do botão selecionado em mat-button-toggle-group com flex-wrap */
 .mat-button-toggle .mat-button-toggle-button {
   width: 100%;
+}
+
+/* ---- Legenda do calendário ---- */
+.cal-legenda {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.cal-legenda-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.cal-legenda-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
 }
 
 /* ---- FullCalendar ---- */
@@ -477,12 +634,12 @@ html.dark {
 
   /* Variáveis */
   --light-gray:     #0f0f17;
-  --text-primary:   #e2e2e2;
-  --text-secondary: #8e8ea0;
+  --text-primary:   #f0f0f0;
+  --text-secondary: #b0b0c8;
   --border-color:   #2a2a3e;
   --navy-dark:      #8080ff;
 
-  body { background: #0f0f17; color: #e2e2e2; }
+  body { background: #0f0f17; color: #f0f0f0; }
 
   /* Sidebar */
   .app-sidebar {
@@ -491,48 +648,48 @@ html.dark {
     box-shadow: 2px 0 12px rgba(0,0,0,0.4);
   }
   .app-sidebar .sidebar-logo { border-bottom-color: #2a2a3e; }
-  .app-sidebar nav a { color: #8e8ea0; }
-  .app-sidebar nav a:hover { background: rgba(255,255,255,0.05); color: #e2e2e2; }
+  .app-sidebar nav a { color: #b0b0c8; }
+  .app-sidebar nav a:hover { background: rgba(255,255,255,0.05); color: #f0f0f0; }
   .app-sidebar nav a.active {
     background: rgba(128,128,255,0.12);
     color: #a0a0ff;
     border-left-color: #8080ff;
   }
   .app-sidebar .sidebar-footer { border-top-color: #2a2a3e; }
-  .sidebar-theme-toggle { color: #8e8ea0; &:hover { background: rgba(255,255,255,0.05); color: #e2e2e2; } }
+  .sidebar-theme-toggle { color: #b0b0c8; &:hover { background: rgba(255,255,255,0.05); color: #f0f0f0; } }
 
   /* Topbar */
   .app-topbar {
     background: #1a1a2e;
     border-bottom-color: #2a2a3e;
-    color: #e2e2e2;
+    color: #f0f0f0;
     box-shadow: 0 1px 4px rgba(0,0,0,0.3);
   }
   .app-topbar .topbar-menu-btn {
-    color: #e2e2e2;
+    color: #f0f0f0;
     &:hover { background: rgba(255,255,255,0.08); }
   }
-  .app-topbar .topbar-date { color: #8e8ea0; }
-  .app-topbar .user-info { color: #e2e2e2; }
+  .app-topbar .topbar-date { color: #b0b0c8; }
+  .app-topbar .user-info { color: #f0f0f0; }
 
   /* Cards */
   .page-card { background: #1a1a2e; border-color: #2a2a3e; }
   .page-card .card-header { border-bottom-color: #2a2a3e; }
-  .page-card .card-header h2 { color: #e2e2e2; }
+  .page-card .card-header h2 { color: #f0f0f0; }
 
   /* Stat cards */
   .stat-card { background: #1a1a2e; border-color: #2a2a3e; }
-  .stat-card .stat-label { color: #8e8ea0; }
-  .stat-card .stat-value { color: #e2e2e2; }
+  .stat-card .stat-label { color: #b0b0c8; }
+  .stat-card .stat-value { color: #f0f0f0; }
 
   /* Tabelas */
   .mat-mdc-table { background: #1a1a2e !important; }
   .mdc-data-table__header-cell {
     background: #13131f !important;
-    color: #8e8ea0 !important;
+    color: #b0b0c8 !important;
     border-bottom-color: #2a2a3e !important;
   }
-  .mdc-data-table__cell { color: #e2e2e2 !important; border-bottom-color: #2a2a3e !important; }
+  .mdc-data-table__cell { color: #f0f0f0 !important; border-bottom-color: #2a2a3e !important; }
   .mat-mdc-row:hover { background: rgba(255,255,255,0.03) !important; }
 
   /* Formulários inline (fundo claro que aparece nas telas de CRUD) */
@@ -545,7 +702,7 @@ html.dark {
   .fc .fc-button {
     background-color: #1a1a2e !important;
     border-color: #2a2a3e !important;
-    color: #8e8ea0 !important;
+    color: #b0b0c8 !important;
   }
   .fc .fc-daygrid-day.fc-day-today { background: rgba(128,128,255,0.1) !important; }
   .fc .fc-daygrid-day { background: #1a1a2e !important; }
@@ -557,35 +714,310 @@ html.dark {
     background: #13131f;
     border-right-color: #2a2a3e;
   }
-  .login-left .login-tagline { color: #8e8ea0; }
-  .login-form-wrapper h2 { color: #e2e2e2; }
-  .login-subtitle { color: #8e8ea0; }
-  .field-label { color: #8e8ea0; }
+  .login-left .login-tagline { color: #b0b0c8; }
+  .login-form-wrapper h2 { color: #f0f0f0; }
+  .login-subtitle { color: #b0b0c8; }
+  .field-label { color: #b0b0c8; }
   .link-forgot { color: #a0a0ff; }
-  .remember-check { color: #8e8ea0; }
+  .remember-check { color: #b0b0c8; }
   .security-note {
     border-top-color: #2a2a3e;
-    span { color: #8e8ea0; }
+    span { color: #b0b0c8; }
   }
+
+  /* Pessoa card */
+  .pessoa-card { border-bottom-color: #2a2a3e; }
+  .pessoa-avatar { background: #5050d0; }
+
+  /* Calendário — list view dark */
+  .fc .fc-list-day-cushion { background: #13131f !important; }
+  .fc .fc-list-event:hover td { background: rgba(255,255,255,0.04) !important; }
+  .fc .fc-list-empty-cushion { color: #b0b0c8 !important; }
+  .fc-theme-standard .fc-list { border-color: #2a2a3e !important; }
+  .fc .fc-list-event-title a { color: #f0f0f0 !important; }
+  .fc .fc-list-event-time { color: #b0b0c8 !important; }
+
+  /* Perfil */
+  .perfil-hero { border-bottom-color: #2a2a3e; }
+  .perfil-info-row { border-bottom-color: #2a2a3e; }
+  .perfil-senha-section { border-top-color: #2a2a3e; }
+  .perfil-nome { color: #f0f0f0; }
+  .perfil-info-value { color: #f0f0f0; }
 
   /* Badges */
   .badge-blue { background: rgba(128,128,255,0.15); color: #a0a0ff; }
 
   /* Botões stroked */
-  .mat-mdc-outlined-button { border-color: #2a2a3e !important; color: #e2e2e2 !important; }
+  .mat-mdc-outlined-button { border-color: #2a2a3e !important; color: #f0f0f0 !important; }
 
   /* mat-menu */
   .mat-mdc-menu-panel { background: #1a1a2e !important; }
-  .mat-mdc-menu-item { color: #e2e2e2 !important; }
+  .mat-mdc-menu-item { color: #f0f0f0 !important; }
   .mat-mdc-menu-item:hover { background: rgba(255,255,255,0.06) !important; }
 
   /* Paginador */
-  .mat-mdc-paginator { background: #1a1a2e !important; color: #e2e2e2 !important; }
+  .mat-mdc-paginator { background: #1a1a2e !important; color: #f0f0f0 !important; }
 
   /* Chip / filtros */
-  .mat-mdc-chip { background: #2a2a3e !important; color: #e2e2e2 !important; }
+  .mat-mdc-chip { background: #2a2a3e !important; color: #f0f0f0 !important; }
   .mat-mdc-chip.mat-mdc-chip-selected { background: rgba(128,128,255,0.25) !important; color: #c0c0ff !important; }
 
   /* Dialog */
-  .mat-mdc-dialog-container .mdc-dialog__surface { background: #1a1a2e !important; color: #e2e2e2 !important; }
+  .mat-mdc-dialog-container .mdc-dialog__surface { background: #1a1a2e !important; color: #f0f0f0 !important; }
+  .mat-mdc-dialog-title { color: #f0f0f0 !important; }
+
+  /* Form fields — texto digitado e labels */
+  --mdc-outlined-text-field-input-text-color:        #f0f0f0;
+  --mdc-outlined-text-field-label-text-color:        #b0b0c8;
+  --mdc-outlined-text-field-outline-color:           #2a2a3e;
+  --mdc-outlined-text-field-hover-outline-color:     #4a4a6a;
+  --mdc-outlined-text-field-disabled-outline-color:  #2a2a3e;
+  --mdc-filled-text-field-input-text-color:          #f0f0f0;
+  --mdc-filled-text-field-label-text-color:          #b0b0c8;
+  --mdc-filled-text-field-container-color:           #13131f;
+
+  /* Select — trigger e opções */
+  --mat-select-trigger-text-color:           #f0f0f0;
+  --mat-select-enabled-arrow-color:          #b0b0c8;
+  --mat-select-panel-background-color:       #1a1a2e;
+  --mat-option-label-text-color:             #f0f0f0;
+  --mat-option-selected-state-label-text-color: #c0c0ff;
+  .mat-mdc-select-panel { background: #1a1a2e !important; }
+  .mat-mdc-option { color: #f0f0f0 !important; }
+  .mat-mdc-option:hover { background: rgba(255,255,255,0.06) !important; }
+  .mat-mdc-option.mdc-list-item--selected { background: rgba(128,128,255,0.15) !important; }
+
+  /* Button toggle */
+  --mat-standard-button-toggle-text-color:            #f0f0f0;
+  --mat-standard-button-toggle-background-color:      #1a1a2e;
+  --mat-standard-button-toggle-selected-state-text-color:       #c0c0ff;
+  --mat-standard-button-toggle-selected-state-background-color: rgba(128,128,255,0.2);
+  --mat-standard-button-toggle-divider-color:         #2a2a3e;
+  .mat-button-toggle-appearance-standard { color: #f0f0f0 !important; background: #1a1a2e !important; }
+  .mat-button-toggle-checked { color: #c0c0ff !important; background: rgba(128,128,255,0.2) !important; }
+
+  /* Datepicker / Timepicker */
+  --mat-datepicker-calendar-container-background-color:   #1a1a2e;
+  --mat-datepicker-calendar-container-text-color:         #f0f0f0;
+  --mat-datepicker-calendar-date-text-color:              #f0f0f0;
+  --mat-datepicker-calendar-date-disabled-state-text-color: #4a4a6a;
+  --mat-datepicker-calendar-header-text-color:            #b0b0c8;
+  --mat-datepicker-calendar-navigation-button-icon-color: #b0b0c8;
+  .mat-datepicker-content { background: #1a1a2e !important; color: #f0f0f0 !important; }
+  .mat-calendar-body-cell-content { color: #f0f0f0 !important; }
+  .mat-calendar-body-label { color: #b0b0c8 !important; }
+  .mat-calendar-arrow { fill: #b0b0c8 !important; }
+
+  /* Snackbar */
+  .mat-mdc-snack-bar-container { background: #2a2a3e !important; color: #f0f0f0 !important; }
+
+  /* Progress bar track */
+  --mdc-linear-progress-track-color: rgba(255,255,255,0.1);
+
+  /* mat-flat-button (primário) texto */
+  .mat-mdc-unelevated-button:not(.btn-yellow):not(.btn-green):not(.btn-red):not(.btn-blue):not(.btn-entrar) {
+    color: #f0f0f0 !important;
+  }
+}
+
+/* ================================================================
+   RESPONSIVO / MOBILE
+   ================================================================ */
+
+/* Wrapper de tabela com scroll horizontal */
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ---- Alternância desktop/mobile ---- */
+.hide-on-mobile    { }
+.show-on-mobile    { display: none; }
+.filtro-select-mobile { display: none; }
+
+/* ---- Cards de pessoas (professores / alunos) — mobile ---- */
+.pessoa-card-list { display: flex; flex-direction: column; }
+
+.pessoa-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 4px;
+  border-bottom: 1px solid var(--border-color);
+
+  &:last-child { border-bottom: none; }
+}
+
+.pessoa-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--navy-dark);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  letter-spacing: 0.5px;
+}
+
+.pessoa-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.pessoa-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 2px;
+}
+
+.pessoa-nome {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.pessoa-detalhe {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 1px;
+}
+
+.pessoa-menu-btn {
+  flex-shrink: 0;
+  color: var(--text-secondary);
+}
+
+/* Avatares coloridos por status (aulas) */
+.pessoa-avatar.avatar-agendada { background: var(--navy-dark); }
+.pessoa-avatar.avatar-realizada { background: var(--green); }
+.pessoa-avatar.avatar-cancelada { background: var(--gray); }
+.pessoa-avatar mat-icon { font-size: 22px; width: 22px; height: 22px; color: #fff; }
+
+/* Grid de painéis do dashboard do aluno */
+.dash-panels-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* ---- Tablets e celulares (≤ 768px) ---- */
+@media (max-width: 768px) {
+
+  /* Topbar */
+  .app-topbar { padding: 0 12px; gap: 8px; }
+  .topbar-date { display: none !important; }
+
+  /* Conteúdo */
+  .app-content { padding: 12px; }
+
+  /* Cards */
+  .page-card { padding: 16px; border-radius: 8px; max-width: 100% !important; }
+  .page-card .card-header { margin-bottom: 12px; padding-bottom: 12px; }
+  .page-card .card-header h2 { font-size: 0.9rem; }
+
+  /* Formulários */
+  .form-grid { grid-template-columns: 1fr !important; }
+  .form-section { padding: 14px; }
+
+  /* Dashboard — grid 2 colunas */
+  .dashboard-grid { grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .dashboard-grid-centered { gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+  .dashboard-grid-centered .stat-card { min-width: 130px; }
+  .stat-card { padding: 14px 10px; }
+  .stat-card .stat-value { font-size: 2rem; }
+
+  /* Alternância desktop / mobile */
+  .hide-on-mobile { display: none !important; }
+  .show-on-mobile { display: flex !important; }
+
+  /* Tabelas — ocultar colunas secundárias */
+  .mat-column-telefone,
+  .mat-column-descricao,
+  .mat-column-quadra,
+  .mat-column-limiteAlunos,
+  .mat-column-totalAlunos { display: none !important; }
+
+  /* Dashboard do aluno: grid 2 colunas → coluna única */
+  .dash-panels-grid { grid-template-columns: 1fr; gap: 12px; }
+
+  /* Filtro de aulas: esconde toggles, mostra select */
+  .filtro-toggle-wrap { display: none !important; }
+  .filtro-select-mobile { display: block !important; }
+
+  /* Paginador compacto */
+  .mat-mdc-paginator-container {
+    justify-content: center !important;
+    flex-wrap: nowrap !important;
+    padding: 0 4px !important;
+    min-height: 48px !important;
+  }
+  .mat-mdc-paginator-page-size { display: none !important; }
+  .mat-mdc-paginator-navigation-first,
+  .mat-mdc-paginator-navigation-last { display: none !important; }
+  .mat-mdc-paginator-range-label {
+    margin: 0 4px !important;
+    font-size: 0.82rem !important;
+  }
+
+  /* Histórico — filtros empilhados */
+  .historico-filtros { flex-direction: column !important; }
+  .historico-filtros > mat-form-field { min-width: 100% !important; }
+
+  /* Legenda do calendário — rolagem horizontal no mobile */
+  .cal-legenda {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 8px;
+    gap: 8px;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+  }
+  .cal-legenda-item { font-size: 11px; }
+
+  /* FullCalendar mobile */
+  .fc .fc-toolbar { gap: 6px; align-items: center; }
+  .fc .fc-toolbar-title { font-size: 0.85rem !important; }
+  .fc .fc-button { padding: 3px 8px !important; font-size: 11px !important; border-radius: 12px !important; }
+  .fc .fc-view-harness { min-height: 300px; }
+  /* List view — legibilidade */
+  .fc .fc-list-event-title a { font-size: 0.82rem !important; }
+  .fc .fc-list-event-time { font-size: 0.78rem !important; }
+  .fc .fc-list-day-cushion { font-size: 0.8rem; padding: 6px 12px; }
+  .fc .fc-list-empty { font-size: 0.85rem; }
+}
+
+/* ---- Celulares pequenos (≤ 480px) ---- */
+@media (max-width: 480px) {
+  .app-content { padding: 8px; }
+  .page-card { padding: 10px; }
+
+  /* Ocultar nome do usuário no topbar — mantém ícone */
+  .app-topbar .user-info span { display: none; }
+
+  /* Stat cards menores */
+  .stat-card .stat-value { font-size: 1.7rem; }
+  .stat-card .stat-label { font-size: 0.65rem; }
+
+  /* Ocultar professor em telas muito pequenas */
+  .mat-column-professor { display: none !important; }
+
+  /* Ocultar fim no histórico (inicio já mostra data+hora completa) */
+  .mat-column-fim { display: none !important; }
+
+  /* Form section ainda mais compacto */
+  .form-section { padding: 10px; }
+
+  /* FullCalendar list view em phones */
+  .fc .fc-list-event-title a { font-size: 0.78rem !important; }
 }

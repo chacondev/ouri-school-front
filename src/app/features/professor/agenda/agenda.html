@@ -4,57 +4,59 @@
   </div>
 
   @if (carregando()) { <mat-progress-bar mode="indeterminate" /> }
-  <table mat-table [dataSource]="aulas()">
-    <ng-container matColumnDef="modalidade">
-      <th mat-header-cell *matHeaderCellDef>Modalidade</th>
-      <td mat-cell *matCellDef="let a">{{ a.modalidade }}</td>
-    </ng-container>
-    <ng-container matColumnDef="quadra">
-      <th mat-header-cell *matHeaderCellDef>Quadra</th>
-      <td mat-cell *matCellDef="let a">{{ a.quadra }}</td>
-    </ng-container>
-    <ng-container matColumnDef="inicio">
-      <th mat-header-cell *matHeaderCellDef>Início</th>
-      <td mat-cell *matCellDef="let a">{{ a.inicio | date:'dd/MM/yy HH:mm' }}</td>
-    </ng-container>
-    <ng-container matColumnDef="fim">
-      <th mat-header-cell *matHeaderCellDef>Fim</th>
-      <td mat-cell *matCellDef="let a">{{ a.fim | date:'HH:mm' }}</td>
-    </ng-container>
-    <ng-container matColumnDef="limiteAlunos">
-      <th mat-header-cell *matHeaderCellDef>Vagas</th>
-      <td mat-cell *matCellDef="let a">{{ a.limiteAlunos }}</td>
-    </ng-container>
-    <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef>Status</th>
-      <td mat-cell *matCellDef="let a">
-        <span [class]="statusClass(a.status)">{{ a.status }}</span>
-      </td>
-    </ng-container>
-    <ng-container matColumnDef="acoes">
-      <th mat-header-cell *matHeaderCellDef>Ações</th>
-      <td mat-cell *matCellDef="let a">
-        <div class="actions-cell">
-          <button mat-icon-button (click)="verInscritos(a)" title="Ver inscritos">
-            <mat-icon style="color:var(--blue)">group</mat-icon>
-          </button>
-          @if (a.status === 'AGENDADA') {
-            <button mat-icon-button (click)="realizarAula(a)" title="Marcar como realizada">
-              <mat-icon style="color:var(--green)">check_circle</mat-icon>
+  <div class="table-wrap">
+    <table mat-table [dataSource]="aulas()">
+      <ng-container matColumnDef="modalidade">
+        <th mat-header-cell *matHeaderCellDef>Modalidade</th>
+        <td mat-cell *matCellDef="let a">{{ a.modalidade }}</td>
+      </ng-container>
+      <ng-container matColumnDef="quadra">
+        <th mat-header-cell *matHeaderCellDef>Quadra</th>
+        <td mat-cell *matCellDef="let a">{{ a.quadra }}</td>
+      </ng-container>
+      <ng-container matColumnDef="inicio">
+        <th mat-header-cell *matHeaderCellDef>Início</th>
+        <td mat-cell *matCellDef="let a">{{ a.inicio | date:'dd/MM/yy HH:mm' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="fim">
+        <th mat-header-cell *matHeaderCellDef>Fim</th>
+        <td mat-cell *matCellDef="let a">{{ a.fim | date:'HH:mm' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="limiteAlunos">
+        <th mat-header-cell *matHeaderCellDef>Vagas</th>
+        <td mat-cell *matCellDef="let a">{{ a.limiteAlunos }}</td>
+      </ng-container>
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let a">
+          <span [class]="statusClass(a.status)">{{ a.status }}</span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let a">
+          <div class="actions-cell">
+            <button mat-icon-button (click)="verInscritos(a)" title="Ver inscritos">
+              <mat-icon style="color:var(--blue)">group</mat-icon>
             </button>
-            <button mat-icon-button (click)="cancelarAula(a)" title="Cancelar aula">
-              <mat-icon style="color:var(--red)">cancel</mat-icon>
-            </button>
-          }
-        </div>
-      </td>
-    </ng-container>
-    <tr mat-header-row *matHeaderRowDef="colunas"></tr>
-    <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
-  </table>
+            @if (a.status === 'AGENDADA') {
+              <button mat-icon-button (click)="realizarAula(a)" title="Marcar como realizada">
+                <mat-icon style="color:var(--green)">check_circle</mat-icon>
+              </button>
+              <button mat-icon-button (click)="cancelarAula(a)" title="Cancelar aula">
+                <mat-icon style="color:var(--red)">cancel</mat-icon>
+              </button>
+            }
+          </div>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+      <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
+    </table>
+  </div>
 
   @if (aulas().length === 0) {
-    <p class="text-center mt-16" style="color:#999">Nenhuma aula agendada.</p>
+    <p class="text-center mt-16" style="color:var(--text-secondary)">Nenhuma aula agendada.</p>
   }
 
   <mat-paginator

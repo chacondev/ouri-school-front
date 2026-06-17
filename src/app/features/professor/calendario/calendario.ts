@@ -4,6 +4,7 @@ import { FullCalendarModule } from '@fullcalendar/angular';
 import { CalendarOptions, EventClickArg, DatesSetArg, EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
+import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
 import ptBrLocale from '@fullcalendar/core/locales/pt-br';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
@@ -28,13 +29,17 @@ export class CalendarioProfessorComponent implements OnInit {
   private dialog = inject(MatDialog);
   private cdr = inject(ChangeDetectorRef);
 
-  private aulasCache = signal<AulaAgendaItem[]>([]);
+  private readonly mobile = typeof window !== 'undefined' && window.innerWidth <= 768;
 
   calendarOptions: CalendarOptions = {
-    plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+    plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
     locale: ptBrLocale,
-    initialView: 'timeGridWeek',
-    headerToolbar: {
+    initialView: this.mobile ? 'listWeek' : 'timeGridWeek',
+    headerToolbar: this.mobile ? {
+      left: 'prev,next',
+      center: 'title',
+      right: 'today',
+    } : {
       left: 'prev,next today',
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay',
@@ -48,7 +53,7 @@ export class CalendarioProfessorComponent implements OnInit {
     events: [],
     eventTimeFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
     slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
-    buttonText: { today: 'Hoje', month: 'Mês', week: 'Semana', day: 'Dia' },
+    buttonText: { today: 'Hoje', month: 'Mês', week: 'Semana', day: 'Dia', list: 'Lista' },
   };
 
   ngOnInit() {}
@@ -58,7 +63,6 @@ export class CalendarioProfessorComponent implements OnInit {
     const dataFim = this.toDateStr(info.end);
 
     this.svc.calendario(dataInicio, dataFim).subscribe(r => {
-      this.aulasCache.set(r.aulas);
       const events: EventInput[] = r.aulas.map(a => ({
         id: String(a.idAula),
         title: `${a.modalidade} — ${a.quadra}`,
@@ -68,8 +72,11 @@ export class CalendarioProfessorComponent implements OnInit {
         borderColor: STATUS_COLORS[a.status] ?? '#607d8b',
         extendedProps: { aula: a },
       }));
-      this.calendarOptions = { ...this.calendarOptions, events };
-      this.cdr.detectChanges();
+
+      setTimeout(() => {
+        this.calendarOptions = { ...this.calendarOptions, events };
+        this.cdr.detectChanges();
+      }, 0);
     });
   }
 

@@ -6,6 +6,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -26,6 +27,7 @@ import { AlertService } from '../../../shared/alert-dialog/alert.service';
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
+    MatMenuModule,
     MatFormFieldModule,
     MatInputModule,
     MatSlideToggleModule,
@@ -151,5 +153,9 @@ export class ProfessoresComponent implements OnInit, OnDestroy {
           this.carregar();
         });
       });
+  }
+
+  iniciais(nome: string): string {
+    return nome.trim().split(/\s+/).slice(0, 2).map(p => p[0]).join('').toUpperCase();
   }
 }

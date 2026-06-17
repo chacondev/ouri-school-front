@@ -17,8 +17,8 @@
   }
 
   @if (modoForm() !== 'fechado') {
-    <div style="background:#f8f9fa;border-radius:8px;padding:20px;margin-bottom:20px">
-      <h3 style="margin-bottom:16px;color:var(--navy)">
+    <div class="form-section">
+      <h3 style="margin-bottom:16px;color:var(--navy-dark)">
         {{ modoForm() === 'novo' ? 'Novo Aluno' : 'Editar Aluno' }}
       </h3>
       <form [formGroup]="form" (ngSubmit)="salvar()">
@@ -60,54 +60,100 @@
   }
 
   @if (carregando()) { <mat-progress-bar mode="indeterminate" /> }
-  <table mat-table [dataSource]="alunos()">
-    <ng-container matColumnDef="nome">
-      <th mat-header-cell *matHeaderCellDef>Nome</th>
-      <td mat-cell *matCellDef="let a">{{ a.nome }}</td>
-    </ng-container>
-    <ng-container matColumnDef="email">
-      <th mat-header-cell *matHeaderCellDef>Email</th>
-      <td mat-cell *matCellDef="let a">{{ a.email }}</td>
-    </ng-container>
-    <ng-container matColumnDef="telefone">
-      <th mat-header-cell *matHeaderCellDef>Telefone</th>
-      <td mat-cell *matCellDef="let a">{{ a.telefone ?? '—' }}</td>
-    </ng-container>
-    <ng-container matColumnDef="ativo">
-      <th mat-header-cell *matHeaderCellDef>Status</th>
-      <td mat-cell *matCellDef="let a">
-        <span [class]="a.ativo ? 'badge badge-green' : 'badge badge-red'">
-          {{ a.ativo ? 'Ativo' : 'Inativo' }}
-        </span>
-      </td>
-    </ng-container>
-    <ng-container matColumnDef="acoes">
-      <th mat-header-cell *matHeaderCellDef>Ações</th>
-      <td mat-cell *matCellDef="let a">
-        <div class="actions-cell">
-          <button mat-icon-button (click)="verHistorico(a)" title="Ver histórico de aulas">
-            <mat-icon style="color:var(--navy)">history</mat-icon>
-          </button>
-          <button mat-icon-button (click)="abrirEditar(a)" title="Editar">
-            <mat-icon style="color:var(--blue)">edit</mat-icon>
-          </button>
-          <button mat-icon-button (click)="alterarStatus(a)" [title]="a.ativo ? 'Inativar' : 'Ativar'">
-            <mat-icon [style.color]="a.ativo ? 'var(--red)' : 'var(--green)'">
-              {{ a.ativo ? 'toggle_on' : 'toggle_off' }}
-            </mat-icon>
-          </button>
-          <button mat-icon-button (click)="excluir(a)" title="Excluir">
-            <mat-icon style="color:var(--red)">delete</mat-icon>
-          </button>
+
+  <!-- Tabela — desktop -->
+  <div class="table-wrap hide-on-mobile">
+    <table mat-table [dataSource]="alunos()">
+      <ng-container matColumnDef="nome">
+        <th mat-header-cell *matHeaderCellDef>Nome</th>
+        <td mat-cell *matCellDef="let a">{{ a.nome }}</td>
+      </ng-container>
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>Email</th>
+        <td mat-cell *matCellDef="let a">{{ a.email }}</td>
+      </ng-container>
+      <ng-container matColumnDef="telefone">
+        <th mat-header-cell *matHeaderCellDef>Telefone</th>
+        <td mat-cell *matCellDef="let a">{{ a.telefone ?? '—' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="ativo">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let a">
+          <span [class]="a.ativo ? 'badge badge-green' : 'badge badge-red'">
+            {{ a.ativo ? 'Ativo' : 'Inativo' }}
+          </span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let a">
+          <div class="actions-cell">
+            <button mat-icon-button (click)="verHistorico(a)" title="Ver histórico de aulas">
+              <mat-icon style="color:var(--text-secondary)">history</mat-icon>
+            </button>
+            <button mat-icon-button (click)="abrirEditar(a)" title="Editar">
+              <mat-icon style="color:var(--blue)">edit</mat-icon>
+            </button>
+            <button mat-icon-button (click)="alterarStatus(a)" [title]="a.ativo ? 'Inativar' : 'Ativar'">
+              <mat-icon [style.color]="a.ativo ? 'var(--red)' : 'var(--green)'">
+                {{ a.ativo ? 'toggle_on' : 'toggle_off' }}
+              </mat-icon>
+            </button>
+            <button mat-icon-button (click)="excluir(a)" title="Excluir">
+              <mat-icon style="color:var(--red)">delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+      <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
+    </table>
+  </div>
+
+  <!-- Cards — mobile -->
+  <div class="pessoa-card-list show-on-mobile">
+    @for (a of alunos(); track a.id) {
+      <div class="pessoa-card">
+        <div class="pessoa-avatar">{{ iniciais(a.nome) }}</div>
+        <div class="pessoa-body">
+          <div class="pessoa-header">
+            <span class="pessoa-nome">{{ a.nome }}</span>
+            <span [class]="a.ativo ? 'badge badge-green' : 'badge badge-red'">
+              {{ a.ativo ? 'Ativo' : 'Inativo' }}
+            </span>
+          </div>
+          <div class="pessoa-detalhe">{{ a.email }}</div>
+          @if (a.telefone) {
+            <div class="pessoa-detalhe">{{ a.telefone }}</div>
+          }
         </div>
-      </td>
-    </ng-container>
-    <tr mat-header-row *matHeaderRowDef="colunas"></tr>
-    <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
-  </table>
+        <button mat-icon-button class="pessoa-menu-btn" [matMenuTriggerFor]="menuAluno">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menuAluno="matMenu">
+          <button mat-menu-item (click)="verHistorico(a)">
+            <mat-icon>history</mat-icon> Ver histórico
+          </button>
+          <button mat-menu-item (click)="abrirEditar(a)">
+            <mat-icon>edit</mat-icon> Editar
+          </button>
+          <button mat-menu-item (click)="alterarStatus(a)">
+            <mat-icon [style.color]="a.ativo ? 'var(--red)' : 'var(--green)'">
+              {{ a.ativo ? 'toggle_off' : 'toggle_on' }}
+            </mat-icon>
+            {{ a.ativo ? 'Desativar' : 'Ativar' }}
+          </button>
+          <button mat-menu-item (click)="excluir(a)">
+            <mat-icon style="color:var(--red)">delete</mat-icon>
+            <span style="color:var(--red)">Excluir</span>
+          </button>
+        </mat-menu>
+      </div>
+    }
+  </div>
 
   @if (alunos().length === 0) {
-    <p class="text-center mt-16" style="color:#999">Nenhum aluno cadastrado.</p>
+    <p class="text-center mt-16" style="color:var(--text-secondary)">Nenhum aluno cadastrado.</p>
   }
 
   <mat-paginator

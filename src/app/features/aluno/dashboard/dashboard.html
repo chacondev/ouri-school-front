@@ -4,7 +4,7 @@
       <span class="stat-label">Inscrições Ativas</span>
       <span class="stat-value">{{ d.totalInscricoesAtivas }}</span>
     </div>
-    <div class="stat-card" style="border-top-color:var(--blue)">
+    <div class="stat-card" style="border-top-color:var(--navy-dark)">
       <span class="stat-label">Próximas Aulas</span>
       <span class="stat-value">{{ d.proximasAulas.length }}</span>
     </div>
@@ -12,7 +12,7 @@
       <span class="stat-label">Aulas este mês</span>
       <span class="stat-value">{{ d.aulasEsteMes }}</span>
     </div>
-    <div class="stat-card" style="border-top-color:#f97316">
+    <div class="stat-card" style="border-top-color:var(--orange)">
       <span class="stat-label">Próxima aula em</span>
       <span class="stat-value" style="font-size:1.1rem">
         {{ d.proximasAulas[0] ? (d.proximasAulas[0].inicio | date:'dd/MM HH:mm') : '—' }}
@@ -20,7 +20,7 @@
     </div>
   </div>
 
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+  <div class="dash-panels-grid">
 
     <!-- Progresso do mês -->
     <div class="page-card" style="margin-bottom:0">
@@ -29,15 +29,15 @@
       </div>
       @if (d.progressoMes && d.progressoMes.length > 0) {
         @for (item of d.progressoMes; track item.modalidade) {
-          <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f0f0f0">
-            <mat-icon style="color:var(--blue);font-size:28px;width:28px;height:28px">sports</mat-icon>
-            <span style="font-size:15px;color:#333">
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border-color)">
+            <mat-icon style="color:var(--navy-dark);font-size:28px;width:28px;height:28px">sports</mat-icon>
+            <span style="font-size:15px;color:var(--text-primary)">
               <strong>{{ item.quantidade }}x</strong> aulas de {{ item.modalidade | lowercase }}
             </span>
           </div>
         }
       } @else {
-        <p style="color:#999;text-align:center;margin:16px 0">Nenhuma aula realizada este mês.</p>
+        <p style="color:var(--text-secondary);text-align:center;margin:16px 0">Nenhuma aula realizada este mês.</p>
       }
     </div>
 
@@ -46,17 +46,17 @@
       <div class="card-header" style="margin-bottom:16px">
         <h2>Seu histórico</h2>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f0f0f0">
-        <mat-icon style="color:var(--blue);font-size:28px;width:28px;height:28px">school</mat-icon>
-        <span style="font-size:15px;color:#333"><strong>{{ d.totalAulasPraticadas }}x</strong> aulas praticadas</span>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border-color)">
+        <mat-icon style="color:var(--navy-dark);font-size:28px;width:28px;height:28px">school</mat-icon>
+        <span style="font-size:15px;color:var(--text-primary)"><strong>{{ d.totalAulasPraticadas }}x</strong> aulas praticadas</span>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f0f0f0">
-        <mat-icon style="color:#f97316;font-size:28px;width:28px;height:28px">schedule</mat-icon>
-        <span style="font-size:15px;color:#333"><strong>{{ d.totalHorasEmAula }}h</strong> de aulas</span>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border-color)">
+        <mat-icon style="color:var(--orange);font-size:28px;width:28px;height:28px">schedule</mat-icon>
+        <span style="font-size:15px;color:var(--text-primary)"><strong>{{ d.totalHorasEmAula }}h</strong> de aulas</span>
       </div>
       <div style="display:flex;align-items:center;gap:12px;padding:10px 0">
         <mat-icon style="color:var(--yellow);font-size:28px;width:28px;height:28px">emoji_events</mat-icon>
-        <span style="font-size:15px;color:#333"><strong>{{ d.totalModalidadesPraticadas }}</strong> modalidades diferentes</span>
+        <span style="font-size:15px;color:var(--text-primary)"><strong>{{ d.totalModalidadesPraticadas }}</strong> modalidades diferentes</span>
       </div>
     </div>
 
@@ -71,35 +71,37 @@
     </a>
   </div>
 
-  <table mat-table [dataSource]="inscricoes()">
-    <ng-container matColumnDef="modalidade">
-      <th mat-header-cell *matHeaderCellDef>Modalidade</th>
-      <td mat-cell *matCellDef="let i">{{ i.modalidade }}</td>
-    </ng-container>
-    <ng-container matColumnDef="professor">
-      <th mat-header-cell *matHeaderCellDef>Professor</th>
-      <td mat-cell *matCellDef="let i">{{ i.professor }}</td>
-    </ng-container>
-    <ng-container matColumnDef="inicio">
-      <th mat-header-cell *matHeaderCellDef>Data / Hora</th>
-      <td mat-cell *matCellDef="let i">{{ i.inicio | date:'dd/MM/yy HH:mm' }}</td>
-    </ng-container>
-    <ng-container matColumnDef="acoes">
-      <th mat-header-cell *matHeaderCellDef>Ação</th>
-      <td mat-cell *matCellDef="let i">
-        <button mat-icon-button (click)="cancelarInscricao(i)" title="Cancelar inscrição"
-          [disabled]="cancelando() === i.idInscricao">
-          <mat-icon style="color:var(--red)">{{ cancelando() === i.idInscricao ? 'hourglass_empty' : 'cancel' }}</mat-icon>
-        </button>
-      </td>
-    </ng-container>
-    <tr mat-header-row *matHeaderRowDef="colunas"></tr>
-    <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
-  </table>
+  <div class="table-wrap">
+    <table mat-table [dataSource]="inscricoes()">
+      <ng-container matColumnDef="modalidade">
+        <th mat-header-cell *matHeaderCellDef>Modalidade</th>
+        <td mat-cell *matCellDef="let i">{{ i.modalidade }}</td>
+      </ng-container>
+      <ng-container matColumnDef="professor">
+        <th mat-header-cell *matHeaderCellDef>Professor</th>
+        <td mat-cell *matCellDef="let i">{{ i.professor }}</td>
+      </ng-container>
+      <ng-container matColumnDef="inicio">
+        <th mat-header-cell *matHeaderCellDef>Data / Hora</th>
+        <td mat-cell *matCellDef="let i">{{ i.inicio | date:'dd/MM/yy HH:mm' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef>Ação</th>
+        <td mat-cell *matCellDef="let i">
+          <button mat-icon-button (click)="cancelarInscricao(i)" title="Cancelar inscrição"
+            [disabled]="cancelando() === i.idInscricao">
+            <mat-icon style="color:var(--red)">{{ cancelando() === i.idInscricao ? 'hourglass_empty' : 'cancel' }}</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+      <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
+    </table>
+  </div>
 
   @if (inscricoes().length === 0) {
-    <p class="text-center mt-16" style="color:#999">
-      Nenhuma inscrição ativa. <a routerLink="/aluno/aulas" style="color:var(--blue)">Ver aulas disponíveis</a>
+    <p class="text-center mt-16" style="color:var(--text-secondary)">
+      Nenhuma inscrição ativa. <a routerLink="/aluno/aulas" style="color:var(--navy-dark)">Ver aulas disponíveis</a>
     </p>
   }
 </div>

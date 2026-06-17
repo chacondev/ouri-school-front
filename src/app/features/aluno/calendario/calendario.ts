@@ -4,6 +4,7 @@ import { FullCalendarModule } from '@fullcalendar/angular';
 import { CalendarOptions, EventClickArg, DatesSetArg, EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
+import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
 import ptBrLocale from '@fullcalendar/core/locales/pt-br';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
@@ -29,11 +30,17 @@ export class CalendarioAlunoComponent {
   private dialog = inject(MatDialog);
   private cdr = inject(ChangeDetectorRef);
 
+  private readonly mobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+
   calendarOptions: CalendarOptions = {
-    plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+    plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
     locale: ptBrLocale,
-    initialView: 'timeGridWeek',
-    headerToolbar: {
+    initialView: this.mobile ? 'listWeek' : 'timeGridWeek',
+    headerToolbar: this.mobile ? {
+      left: 'prev,next',
+      center: 'title',
+      right: 'today',
+    } : {
       left: 'prev,next today',
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay',
@@ -47,7 +54,7 @@ export class CalendarioAlunoComponent {
     events: [],
     eventTimeFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
     slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
-    buttonText: { today: 'Hoje', month: 'Mês', week: 'Semana', day: 'Dia' },
+    buttonText: { today: 'Hoje', month: 'Mês', week: 'Semana', day: 'Dia', list: 'Lista' },
   };
 
   carregarPeriodo(info: DatesSetArg) {
@@ -64,8 +71,11 @@ export class CalendarioAlunoComponent {
         borderColor: STATUS_COLORS[a.statusAula] ?? '#607d8b',
         extendedProps: { aula: a },
       }));
-      this.calendarOptions = { ...this.calendarOptions, events };
-      this.cdr.detectChanges();
+
+      setTimeout(() => {
+        this.calendarOptions = { ...this.calendarOptions, events };
+        this.cdr.detectChanges();
+      }, 0);
     });
   }
 

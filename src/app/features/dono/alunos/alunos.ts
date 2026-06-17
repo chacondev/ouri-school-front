@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
 import { AlunoService } from '../../../core/services/aluno.service';
 import { Aluno } from '../../../core/models/aluno.model';
 import { CryptoService } from '../../../core/services/crypto.service';
@@ -19,7 +20,7 @@ import { HistoricoAlunoDialogComponent } from './historico-aluno-dialog';
 @Component({
   selector: 'app-alunos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatPaginatorModule, MatProgressBarModule, MatDialogModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, MatTableModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatPaginatorModule, MatProgressBarModule, MatDialogModule, MatMenuModule],
   templateUrl: './alunos.html',
 })
 export class AlunosComponent implements OnInit, OnDestroy {
@@ -144,5 +145,9 @@ export class AlunosComponent implements OnInit, OnDestroy {
 
   verHistorico(a: Aluno) {
     this.dialog.open(HistoricoAlunoDialogComponent, { data: a, width: '90vw', maxWidth: '90vw', maxHeight: '90vh' });
+  }
+
+  iniciais(nome: string): string {
+    return nome.trim().split(/\s+/).slice(0, 2).map(p => p[0]).join('').toUpperCase();
   }
 }

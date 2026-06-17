@@ -38,6 +38,10 @@ export class PerfilAlunoComponent implements OnInit {
     });
   }
 
+  iniciais(nome: string): string {
+    return nome.split(' ').filter(Boolean).slice(0, 2).map(p => p[0].toUpperCase()).join('');
+  }
+
   salvar() {
     if (this.form.invalid) return;
     this.salvando.set(true);
