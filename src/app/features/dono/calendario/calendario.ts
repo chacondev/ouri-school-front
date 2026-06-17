@@ -8,6 +8,7 @@ import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
 import ptBrLocale from '@fullcalendar/core/locales/pt-br';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DonoService } from '../../../core/services/dono.service';
 import { AulaAgendaItem } from '../../../core/models/aula.model';
 import { InscritosDialogComponent } from '../aulas/inscritos-dialog';
@@ -20,7 +21,7 @@ const PROFESSOR_COLORS = [
 @Component({
   selector: 'app-calendario-dono',
   standalone: true,
-  imports: [CommonModule, FullCalendarModule, MatDialogModule],
+  imports: [CommonModule, FullCalendarModule, MatDialogModule, MatProgressSpinnerModule],
   templateUrl: './calendario.html',
 })
 export class CalendarioDonoComponent {
@@ -29,6 +30,7 @@ export class CalendarioDonoComponent {
   private cdr = inject(ChangeDetectorRef);
 
   professoresLegenda = signal<{ nome: string; cor: string }[]>([]);
+  loading = signal(false);
 
   private readonly mobile = typeof window !== 'undefined' && window.innerWidth <= 768;
 
@@ -60,6 +62,7 @@ export class CalendarioDonoComponent {
   carregarPeriodo(info: DatesSetArg) {
     const dataInicio = info.start.toISOString().split('T')[0];
     const dataFim = info.end.toISOString().split('T')[0];
+    this.loading.set(true);
     this.svc.calendarioAulas(dataInicio, dataFim).subscribe(r => {
       const colorMap = new Map<string, string>();
       let idx = 0;
@@ -86,6 +89,7 @@ export class CalendarioDonoComponent {
           Array.from(colorMap.entries()).map(([nome, cor]) => ({ nome, cor }))
         );
         this.calendarOptions = { ...this.calendarOptions, events };
+        this.loading.set(false);
         this.cdr.detectChanges();
       }, 0);
     });

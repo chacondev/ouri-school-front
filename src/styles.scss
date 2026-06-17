@@ -917,6 +917,21 @@ mat-form-field { width: 100%; }
   flex-shrink: 0;
 }
 
+.cal-loading-wrapper {
+  position: relative;
+}
+
+.cal-loading-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 8px;
+}
+
 /* ---- FullCalendar ---- */
 .fc .fc-button {
   background-color: #fff !important;
