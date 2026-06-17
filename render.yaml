@@ -2,9 +2,13 @@ services:
   - type: web
     name: ouri-school-front
     env: node
-    buildCommand: "npm ci && npm run build"
+    buildCommand: "npm install && NODE_OPTIONS=--max-old-space-size=512 npm run build"
     startCommand: "node dist/ouri-school-front/server/server.mjs"
     plan: free
     envVars:
       - key: API_URL
         sync: false
+      - key: NG_ALLOWED_HOSTS
+        value: ouri-school-front.onrender.com,localhost
+      - key: NG_TRUST_PROXY_HEADERS
+        value: x-forwarded-for,x-forwarded-host,x-forwarded-proto,x-forwarded-port
