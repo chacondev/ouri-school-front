@@ -8,6 +8,7 @@ import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
 import ptBrLocale from '@fullcalendar/core/locales/pt-br';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ProfessorService } from '../../../core/services/professor.service';
 import { AulaAgendaItem } from '../../../core/models/aula.model';
 import { InscritosDialogComponent } from '../../dono/aulas/inscritos-dialog';
@@ -21,13 +22,15 @@ const STATUS_COLORS: Record<string, string> = {
 @Component({
   selector: 'app-calendario-professor',
   standalone: true,
-  imports: [CommonModule, FullCalendarModule, MatDialogModule],
+  imports: [CommonModule, FullCalendarModule, MatDialogModule, MatProgressSpinnerModule],
   templateUrl: './calendario.html',
 })
 export class CalendarioProfessorComponent implements OnInit {
   private svc = inject(ProfessorService);
   private dialog = inject(MatDialog);
   private cdr = inject(ChangeDetectorRef);
+
+  loading = signal(false);
 
   private readonly mobile = typeof window !== 'undefined' && window.innerWidth <= 768;
 
@@ -62,6 +65,7 @@ export class CalendarioProfessorComponent implements OnInit {
     const dataInicio = this.toDateStr(info.start);
     const dataFim = this.toDateStr(info.end);
 
+    this.loading.set(true);
     this.svc.calendario(dataInicio, dataFim).subscribe(r => {
       const events: EventInput[] = r.aulas.map(a => ({
         id: String(a.idAula),
@@ -75,6 +79,7 @@ export class CalendarioProfessorComponent implements OnInit {
 
       setTimeout(() => {
         this.calendarOptions = { ...this.calendarOptions, events };
+        this.loading.set(false);
         this.cdr.detectChanges();
       }, 0);
     });

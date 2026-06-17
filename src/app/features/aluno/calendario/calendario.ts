@@ -9,6 +9,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import ptBrLocale from '@fullcalendar/core/locales/pt-br';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AlunoService } from '../../../core/services/aluno.service';
 import { HistoricoAulaAlunoItem } from '../../../core/models/historico.model';
 import { AulaDetalheAlunoDialogComponent } from './aula-detalhe-dialog';
@@ -22,13 +23,15 @@ const STATUS_COLORS: Record<string, string> = {
 @Component({
   selector: 'app-calendario-aluno',
   standalone: true,
-  imports: [CommonModule, FullCalendarModule, MatDialogModule, MatButtonModule],
+  imports: [CommonModule, FullCalendarModule, MatDialogModule, MatButtonModule, MatProgressSpinnerModule],
   templateUrl: './calendario.html',
 })
 export class CalendarioAlunoComponent {
   private svc = inject(AlunoService);
   private dialog = inject(MatDialog);
   private cdr = inject(ChangeDetectorRef);
+
+  loading = signal(false);
 
   private readonly mobile = typeof window !== 'undefined' && window.innerWidth <= 768;
 
@@ -61,6 +64,7 @@ export class CalendarioAlunoComponent {
     const dataInicio = info.start.toISOString().split('T')[0];
     const dataFim = info.end.toISOString().split('T')[0];
 
+    this.loading.set(true);
     this.svc.calendario(dataInicio, dataFim).subscribe(r => {
       const events: EventInput[] = r.historico.map(a => ({
         id: String(a.idAula),
@@ -74,6 +78,7 @@ export class CalendarioAlunoComponent {
 
       setTimeout(() => {
         this.calendarOptions = { ...this.calendarOptions, events };
+        this.loading.set(false);
         this.cdr.detectChanges();
       }, 0);
     });

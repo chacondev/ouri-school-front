@@ -15,5 +15,12 @@
     </span>
   </div>
 
-  <full-calendar [options]="calendarOptions" />
+  <div class="cal-loading-wrapper">
+    @if (loading()) {
+      <div class="cal-loading-overlay">
+        <mat-spinner diameter="48" />
+      </div>
+    }
+    <full-calendar [options]="calendarOptions" [class.cal-invisible]="loading()" />
+  </div>
 </div>
