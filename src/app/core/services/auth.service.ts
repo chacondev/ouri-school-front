@@ -8,15 +8,17 @@ import { LoginResponse, UserRole } from '../models/auth.model';
 import { CryptoService } from './crypto.service';
 import { AlertService } from '../../shared/alert-dialog/alert.service';
 
-const API = 'http://localhost:8080';
+
 const CLIENT_HEADER = 'Basic ' + btoa('ouri-school-app:HashAqui!10');
 
+import { API_URL } from '../api-url.token';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
   private platformId = inject(PLATFORM_ID);
   private crypto = inject(CryptoService);
+  private api = inject(API_URL);
   private alert = inject(AlertService);
 
   private get isBrowser() {
@@ -28,7 +30,7 @@ export class AuthService {
       switchMap((senhaCriptografada) => {
         const headers = new HttpHeaders({ Authorization: CLIENT_HEADER });
         return this.http
-          .post<LoginResponse>(`${API}/auth/login`, { email, senha: senhaCriptografada }, { headers })
+          .post<LoginResponse>(`${this.api}/auth/login`, { email, senha: senhaCriptografada }, { headers })
           .pipe(
             tap((res) => {
               if (this.isBrowser) {
