@@ -21,6 +21,6 @@
         <mat-spinner diameter="48" />
       </div>
     }
-    <full-calendar [options]="calendarOptions" />
+    <full-calendar [options]="calendarOptions" [class.cal-invisible]="loading()" />
   </div>
 </div>
